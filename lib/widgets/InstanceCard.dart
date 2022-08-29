@@ -1,7 +1,9 @@
+import 'package:app/widgets/InstanceShellButtton.dart';
 import 'package:app/widgets/InstanceStateChip.dart';
 import 'package:flutter/material.dart';
 
 import '../data/MultipassList.dart';
+import 'ControlStateButton.dart';
 
 class InstanceCard extends StatefulWidget {
   final MultipassListElement instance;
@@ -21,7 +23,10 @@ class _InstanceCardState extends State<InstanceCard> {
       width: 15,
     ));
 
-    rowChildren.add(InstanceStateChip(instance: widget.instance, condensed: true,));
+    rowChildren.add(InstanceStateChip(
+      instance: widget.instance,
+      condensed: true,
+    ));
 
     rowChildren.add(const SizedBox(
       width: 15,
@@ -54,6 +59,24 @@ class _InstanceCardState extends State<InstanceCard> {
     ));
 
     rowChildren.add(const Spacer());
+
+    if (widget.instance.state == 'Running') {
+      rowChildren.add(InstanceShellButton(
+        instance: widget.instance,
+        condensed: true,
+      ));
+      rowChildren.add(const SizedBox(
+        width: 10,
+      ));
+    }
+
+    rowChildren.add(ControlStateButton(
+      instance: widget.instance,
+    ));
+
+    rowChildren.add(const SizedBox(
+      width: 15,
+    ));
 
     return Card(
       child: Row(

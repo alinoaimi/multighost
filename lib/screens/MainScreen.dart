@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
     multipassList = MultipassList.fromJson(json.decode(result.stdout));
     setState(() {});
 
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       if (isActive) {
         loadList();
       }
