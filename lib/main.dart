@@ -1,8 +1,35 @@
-import 'package:app/screens/MainScreen.dart';
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-void main() {
+import 'package:app/screens/InstanceScreen.dart';
+import 'package:app/screens/MainScreen.dart';
+import 'package:desktop_multi_window/desktop_multi_window.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+void main(List<String> args) {
+
+  bool preventMain = false;
+
   runApp(const MyApp());
+
+  // if (args != null && args.length > 0 && args[0] == 'multi_window') {
+  //   final windowId = int.parse(args[1]);
+  //   final argument = args[2].isEmpty
+  //       ? const {}
+  //       : jsonDecode(args[2]) as Map<String, dynamic>;
+  //
+  //   runApp(MaterialApp(
+  //     color: Colors.white,
+  //     home: InstanceScreen(
+  //       // windowController: WindowController.fromWindowId(windowId),
+  //       // args: argument,
+  //     ),
+  //   ));
+  // } else {
+  //   runApp(const MyApp());
+  // }
+
+
 }
 
 class MyApp extends StatelessWidget {
@@ -11,8 +38,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'GraphiPass',
+    return GetMaterialApp(
+      title: 'Multighost',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -25,7 +52,14 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'GraphiPass'),
+      home: const MyHomePage(title: 'Multighost'),
+        getPages: [
+          GetPage(name: '/', page: () => const MainScreen()),
+          GetPage(
+            name: '/instance',
+            page: () => InstanceScreen(),
+          ),
+        ]
     );
   }
 }

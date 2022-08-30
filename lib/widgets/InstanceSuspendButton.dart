@@ -3,30 +3,26 @@ import 'dart:io';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/material.dart';
 
-class ControlStateButton extends StatefulWidget {
+class InstanceSuspendButton extends StatefulWidget {
   final MultipassInstanceObject instance;
   bool? condensed = false;
 
-  ControlStateButton({Key? key, required this.instance, this.condensed})
+  InstanceSuspendButton({Key? key, required this.instance, this.condensed})
       : super(key: key);
 
   @override
-  State<ControlStateButton> createState() => _ControlStateButtonState();
+  State<InstanceSuspendButton> createState() => _InstanceSuspendButtonState();
 }
 
-class _ControlStateButtonState extends State<ControlStateButton> {
+class _InstanceSuspendButtonState extends State<InstanceSuspendButton> {
   bool somethingIsHappening = false;
-
 
   doAction() async {
     somethingIsHappening = true;
     setState(() {});
     if (widget.instance.state! == 'Running') {
       var result =
-          await Process.run('multipass', ['stop', widget.instance.name]);
-    } else if (widget.instance.state! == 'Stopped' || widget.instance.state! == 'Suspended') {
-      var result =
-          await Process.run('multipass', ['start', widget.instance.name]);
+          await Process.run('multipass', ['suspend', widget.instance.name]);
     }
 
     somethingIsHappening = false;
@@ -41,19 +37,10 @@ class _ControlStateButtonState extends State<ControlStateButton> {
 
     widget.condensed ??= false; // there's probably a better way to use in the constructor, will figure it out later
 
-    if (somethingIsHappening && widget.instance.state! != 'Starting') {
-      text = 'Pending';
-      color = const Color.fromRGBO(80, 80, 80, 1.0);
-      icon = null;
-    } else if (widget.instance.state! == 'Running') {
-      text = 'Stop';
-      color = Colors.black;
-      icon = Icons.stop;
-    } else if (widget.instance.state! == 'Starting') {
-      text = 'Starting';
-      color = Colors.black;
-      icon = null;
-    }
+
+    text = 'Suspend';
+    color = const Color.fromRGBO(80, 80, 80, 1.0);
+    icon = Icons.pause;
 
     List<Widget> btnChildren = [];
     if (icon != null) {

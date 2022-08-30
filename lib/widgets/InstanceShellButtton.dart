@@ -1,13 +1,12 @@
 import 'dart:io';
 
+import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/material.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/which.dart';
 
-import '../data/MultipassList.dart';
-
 class InstanceShellButton extends StatefulWidget {
-  final MultipassListElement instance;
+  final MultipassInstanceObject instance;
   bool? condensed = false;
 
   InstanceShellButton({Key? key, required this.instance, this.condensed})
@@ -29,7 +28,6 @@ class _InstanceShellButtonState extends State<InstanceShellButton> {
 osascript -e 'tell app "Terminal"' -e 'do script "multipass shell ${widget.instance.name}"' -e 'end tell'
 
 ''');
-
     } else if (Platform.isLinux) {
       // TODO add command for linux
     } else if (Platform.isWindows) {
@@ -55,11 +53,21 @@ osascript -e 'tell app "Terminal"' -e 'do script "multipass shell ${widget.insta
       children.add(Text('Shell'));
     }
 
+    if (widget.condensed!) {
+      return IconButton(
+          onPressed: () {
+            openShell();
+          },
+          icon: const Icon(Icons.terminal));
+    }
+
     return SizedBox(
       child: OutlinedButton(
-        onPressed: () {
-          openShell();
-        },
+        onPressed: widget.instance.state != 'Running'
+            ? null
+            : () {
+                openShell();
+              },
         style: ButtonStyle(
           // backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
           foregroundColor: MaterialStateProperty.all<Color>(Colors.black),

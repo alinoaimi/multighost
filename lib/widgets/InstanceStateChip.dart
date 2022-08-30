@@ -1,9 +1,9 @@
+import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/material.dart';
 
-import '../data/MultipassList.dart';
 
 class InstanceStateChip extends StatelessWidget {
-  final MultipassListElement instance;
+  final MultipassInstanceObject instance;
   bool? condensed = false;
 
   InstanceStateChip({Key? key, required this.instance, this.condensed})

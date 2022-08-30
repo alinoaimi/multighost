@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/data/MultipassInstanceObject.dart';
+import 'package:app/widgets/GhostAppBar.dart';
 import 'package:app/widgets/InstanceCard.dart';
 import 'package:flutter/material.dart';
 
-import '../data/MultipassList.dart';
 import '../widgets/LoadingWidget.dart';
 
 class MainScreen extends StatefulWidget {
@@ -15,12 +16,26 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  MultipassList? multipassList;
+  List<MultipassInstanceObject>? list;
   bool isActive = true;
 
   loadList() async {
     var result = await Process.run('multipass', ['list', '--format=json']);
-    multipassList = MultipassList.fromJson(json.decode(result.stdout));
+    try {
+      list = [];
+      var rawList = json.decode(result.stdout)['list'];
+      for (var rawInstance in rawList) {
+        MultipassInstanceObject multipassInstanceObject =
+            MultipassInstanceObject(
+                name: rawInstance['name'],
+                release: rawInstance['release'],
+                state: rawInstance['state']);
+        list?.add(multipassInstanceObject);
+      }
+    } catch (ex) {
+      // TODO handle the exception
+      debugPrint('error at loadList');
+    }
     setState(() {});
 
     Future.delayed(const Duration(milliseconds: 200), () {
@@ -47,15 +62,15 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     Widget theBody;
 
-    if (multipassList == null) {
+    if (list == null) {
       theBody = const LoadingWidget();
     } else {
       theBody = const Text('hello world');
 
       ListView listView = ListView.builder(
-          itemCount: multipassList?.list.length,
+          itemCount: list?.length,
           itemBuilder: (BuildContext context, int index) {
-            return InstanceCard(instance: multipassList!.list[index]);
+            return InstanceCard(instance: list![index]);
             // return ListTile(
             //     leading: const Icon(Icons.list),
             //     trailing: Text(
@@ -65,11 +80,8 @@ class _MainScreenState extends State<MainScreen> {
             //     title: Text(multipassList!.list[index].name));
           });
 
-      List<Widget> headerChildren = [];
-
-      headerChildren.add(const Text('Virtualghost', style: TextStyle(fontSize: 22),));
-      headerChildren.add(const Spacer());
-      headerChildren.add(OutlinedButton(
+      List<Widget> headerActions = [];
+      headerActions.add(OutlinedButton(
           onPressed: () {},
           style: ButtonStyle(
             // backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
@@ -93,20 +105,20 @@ class _MainScreenState extends State<MainScreen> {
             ),
           )));
 
-      var header = Row(
-        children: headerChildren,
-      );
-      theBody = Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            header,
-            const SizedBox(
-              height: 8,
+      theBody = Column(
+        children: [
+          GhostAppBar(
+            actions: headerActions,
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [Expanded(child: listView)],
+              ),
             ),
-            Expanded(child: listView)
-          ],
-        ),
+          ),
+        ],
       );
     }
 
