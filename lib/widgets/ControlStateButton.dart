@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app/data/MultipassInstanceObject.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ControlStateButton extends StatefulWidget {
@@ -44,7 +45,11 @@ class _ControlStateButtonState extends State<ControlStateButton> {
     if (somethingIsHappening && widget.instance.state! != 'Starting') {
       text = 'Pending';
       color = const Color.fromRGBO(80, 80, 80, 1.0);
-      icon = null;
+      if(!widget.condensed!) {
+        icon = null;
+      } else {
+        icon = Icons.circle_outlined;
+      }
     } else if (widget.instance.state! == 'Running') {
       text = 'Stop';
       color = Colors.black;
@@ -52,7 +57,11 @@ class _ControlStateButtonState extends State<ControlStateButton> {
     } else if (widget.instance.state! == 'Starting') {
       text = 'Starting';
       color = Colors.black;
-      icon = null;
+      if(!widget.condensed!) {
+        icon = null;
+      } else {
+        icon = Icons.circle_outlined;
+      }
     }
 
     List<Widget> btnChildren = [];

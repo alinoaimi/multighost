@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/data/MultipassInstanceObject.dart';
+import 'package:app/screens/CreateInstance.dart';
 import 'package:app/widgets/GhostAppBar.dart';
 import 'package:app/widgets/InstanceCard.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../widgets/LoadingWidget.dart';
 
@@ -82,7 +84,13 @@ class _MainScreenState extends State<MainScreen> {
 
       List<Widget> headerActions = [];
       headerActions.add(OutlinedButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.dialog(CreateInstance(
+              onCreated: () {
+                // loadAliases();
+              },
+            ));
+          },
           style: ButtonStyle(
             // backgroundColor: MaterialStateProperty.all<Color>(Colors.grey),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.black),

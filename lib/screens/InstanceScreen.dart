@@ -5,12 +5,14 @@ import 'package:app/data/MultipassDisk.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:app/data/MultipassMemory.dart';
 import 'package:app/utils/GlobalUtils.dart';
+import 'package:app/widgets/AliasesView.dart';
 import 'package:app/widgets/CopyWidget.dart';
 import 'package:app/widgets/DiskWidget.dart';
 import 'package:app/widgets/GhostAppBar.dart';
 import 'package:app/widgets/InstanceCard.dart';
 import 'package:app/widgets/LoadingWidget.dart';
 import 'package:app/widgets/MemoryWidget.dart';
+import 'package:app/widgets/MountsView.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -104,6 +106,8 @@ class _InstanceScreenState extends State<InstanceScreen> {
     super.initState();
     instanceName = Get.arguments['instance_name'];
     instance = Get.arguments['instance'];
+
+
 
     loadInstanceInfo();
   }
@@ -257,7 +261,20 @@ class _InstanceScreenState extends State<InstanceScreen> {
 
       tabsView = PageView(
         controller: _pageController,
-        children: [detailsTab, const Text('Mounts'), const Text('Aliases')],
+        onPageChanged: (currentPageIndex) {
+          switch(currentPageIndex) {
+            case 0:
+              selectedTab = 'details';
+              break;
+            case 1:
+              selectedTab = 'mounts';
+              break;
+            case 2:
+              selectedTab = 'aliases';
+              break;
+          }
+        },
+        children: [detailsTab, const MountsView(), AliasesView(instanceName: instanceName,)],
       );
 
       bodyChildren.add(Expanded(
