@@ -2,16 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/utils/GlobalUtils.dart';
+import 'package:app/widgets/ParentStepChild.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
 import '../data/MultipassImage.dart';
 
-class ImageSelector extends StatefulWidget {
-  const ImageSelector({Key? key}) : super(key: key);
+class ImageSelector extends ParentStepChild {
+  DataCallback? onDataAvailable;
+
+  ImageSelector({Key? key, this.onDataAvailable}) : super(key: key);
 
   @override
-  State<ImageSelector> createState() => _ImageSelectorState();
+  ParentStepChildState<ImageSelector> createState() => _ImageSelectorState();
 }
 
 class BoxSelectorItem {
@@ -27,12 +30,18 @@ class BoxSelectorItem {
       this.color});
 }
 
-class _ImageSelectorState extends State<ImageSelector> {
+class _ImageSelectorState extends ParentStepChildState<ImageSelector> {
   MultipassImage? selectedImage = null;
   String? selectedImageGroup = 'ubuntu';
 
   List<MultipassImage> imagesList = [];
   List<BoxSelectorItem> boxItems = [];
+  bool _imagesFetched = false;
+
+  @override
+  canNext() {
+    return false;
+  }
 
   loadImagesList() async {
     var result = await Process.run('multipass', ['find', '--format=json']);
@@ -62,6 +71,8 @@ class _ImageSelectorState extends State<ImageSelector> {
     }
 
     generateBoxItems();
+
+    _imagesFetched = true;
     setState(() {});
   }
 
@@ -158,8 +169,40 @@ class _ImageSelectorState extends State<ImageSelector> {
     return list;
   }
 
+  emitUpdate() {
+    try {
+      if (widget.onDataAvailable != null) {
+        widget.onDataAvailable!({'image': selectedImage?.name});
+      }
+    } catch(ex) {
+      // TODO handle error exception
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
+
+    if (!_imagesFetched) {
+      return Center(
+        child: Column(
+          children: [
+            SizedBox(height: 20,),
+            Row(
+              children: [
+                const SizedBox(
+                    height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2,)),
+                SizedBox(
+                  width: GlobalUtils.standardPaddingOne,
+                ),
+                const Text('fetching images...'),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
     List<Widget> bodyChildren = [];
 
     // // add anbox
@@ -178,7 +221,7 @@ class _ImageSelectorState extends State<ImageSelector> {
     for (BoxSelectorItem boxSelectorItem in boxItems) {
       bool isSelected = selectedImageGroup == boxSelectorItem.id;
 
-      var boxWidget = Container(
+      var boxWidget = AnimatedContainer(
         margin: const EdgeInsets.fromLTRB(0, 0, 10, 10),
         decoration: BoxDecoration(
             color: isSelected ? boxSelectorItem.color?.withOpacity(0.1) : null,
@@ -188,13 +231,14 @@ class _ImageSelectorState extends State<ImageSelector> {
                   : const Color.fromRGBO(168, 168, 168, 1.0),
             ),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
-        // duration: const Duration(milliseconds: 100),
+        duration: const Duration(milliseconds: 100),
         child: InkWell(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           onTap: () async {
             // await FlutterPlatformAlert.playAlertSound();
             selectedImageGroup = boxSelectorItem.id;
             selectedImage = generateList(selectedImageGroup).last;
+            emitUpdate();
             setState(() {});
           },
           child: Padding(
@@ -238,8 +282,8 @@ class _ImageSelectorState extends State<ImageSelector> {
         selectedImage?.release != null) {
       BoxSelectorItem selectedBoxItem =
           boxItems.singleWhere((element) => element.id == selectedImageGroup);
-      bodyChildren.add(Container(
-          // duration: const Duration(milliseconds: 150),
+      bodyChildren.add(AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
           width: double.infinity,
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -249,7 +293,9 @@ class _ImageSelectorState extends State<ImageSelector> {
               ),
               borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: Text('${selectedImage?.release}')));
-      bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne,));
+      bodyChildren.add(SizedBox(
+        height: GlobalUtils.standardPaddingOne,
+      ));
     }
 
     int index = -1;
@@ -272,6 +318,10 @@ class _ImageSelectorState extends State<ImageSelector> {
         onChanged: (newVal) {
           selectedImage = imagesList
               .singleWhere((element) => element.name == newVal.toString());
+
+          debugPrint('data changed kjwn53');
+          emitUpdate();
+
           setState(() {});
         }));
 

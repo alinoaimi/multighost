@@ -2,9 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/data/MultipassImage.dart';
+import 'package:app/screens/ProcessWithProgressDialog.dart';
 import 'package:app/screens/create_instance_steps/NameImageStep.dart';
+import 'package:app/screens/create_instance_steps/NetworkStep.dart';
+import 'package:app/screens/create_instance_steps/PlaceholderStep.dart';
+import 'package:app/screens/create_instance_steps/ResourcesStep.dart';
 import 'package:app/widgets/EmptyWidget.dart';
 import 'package:app/widgets/ImageSelector.dart';
+import 'package:app/widgets/ParentStepChild.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,33 +33,69 @@ class _CreateInstanceState extends State<CreateInstance> {
   TextEditingController _commandController = TextEditingController();
 
   List<Step> steps = [];
+  List<dynamic> stepsData = [];
 
   bool isCreating = false;
   int currentStep = 0;
+  String runEventText = 'loading...';
 
-  CreateInstance() async {
+  createInstance() async {
+
+
+
     isCreating = true;
     setState(() {});
 
-    // var result = await Process.run('multipass', [
-    //   'alias',
-    //   '${selectedImage}:${_commandController.text}',
-    //   _aliasController.text
-    // ]);
-    // debugPrint(result.stdout);
+    String command = 'launch';
+
+    // image
+    command += ' ';
+    command += stepsData[0]['image'];
+
+    // name
+    command += ' --name ';
+    command += stepsData[0]['name'];
+
+    // cpus
+    command += ' --cpus ';
+    command += stepsData[1]['cpus'].toString();
+
+    // mem
+    command += ' --mem ';
+    command += stepsData[1]['mem'].toString();
+
+    // disk
+    command += ' --disk ';
+    command += stepsData[1]['disk'].toString();
+
+    debugPrint(stepsData[0].toString());
+    debugPrint(command);
+
+    // var process = await Process.start('multipass', command.split(' '));
+    // // process.stdout.pipe(stdout);
+    //
+    // process.stdout.listen((event) {
+    //   debugPrint('received event: ');
+    //   debugPrint(utf8.decode(event));
+    // });
 
     isCreating = false;
     setState(() {});
+    Get.back();
 
-    if (widget.onCreated != null) {
-      widget.onCreated!();
-      Get.back();
-    }
+    Get.dialog(
+      ProcessWithProgressDialog(title: 'Creating '+stepsData[0]['name'], command: 'multipass', args: command.split(' '))
+    );
+
+
+
+
   }
 
   @override
   void initState() {
     super.initState();
+    setSteps();
   }
 
   StepState getStepState(stepIndex) {
@@ -67,39 +108,67 @@ class _CreateInstanceState extends State<CreateInstance> {
     return StepState.indexed;
   }
 
+  final GlobalKey stepOneKey = GlobalKey();
+
+  List<ParentStepChild> stepsWidgets = [];
+
   setSteps() {
+
+    stepsWidgets.add(NameImageStep(
+      onDataAvailable: (data) {
+        debugPrint(data.toString());
+        stepsData[0] = data;
+      },
+    ));
+    stepsData.add({});
+    stepsWidgets.add(ResourcesStep(
+      onDataAvailable: (data) {
+        // debugPrint('received data for step 1');
+        // debugPrint(data.toString());
+        stepsData[1] = data;
+      },
+    ));
+    stepsData.add({});
+    stepsWidgets.add(NetworkStep());
+    stepsData.add({});
+
+
+  }
+
+  refreshStepper() {
     steps = [];
     steps.add(Step(
         title: Text('Image'),
         isActive: currentStep >= 0,
         state: getStepState(0),
-        content: Expanded(
-          height: 500,
-          child: NameImageStep(),
-        )));
+        content: stepsWidgets[0]));
     steps.add(Step(
         title: Text('Resources'),
         isActive: currentStep >= 1,
         state: getStepState(1),
-        content: Text('resources step')));
-    steps.add(Step(
-        title: Text('Network'),
-        isActive: currentStep >= 2,
-        state: getStepState(2),
-        content: Text('network')));
+        content: stepsWidgets[1]));
+    // steps.add(Step(
+    //     title: Text('Network'),
+    //     isActive: currentStep >= 2,
+    //     state: getStepState(2),
+    //     content: stepsWidgets[2]));
   }
+
 
   @override
   Widget build(BuildContext context) {
+
+    refreshStepper();
+
     List<Widget> bodyChildren = [];
 
-    setSteps();
 
     var stepper = Stepper(
       steps: steps,
       type: StepperType.horizontal,
       currentStep: currentStep,
       elevation: 1,
+      // physics: BouncingScrollPhysics(),
       controlsBuilder: (context, details) {
         return const EmptyWidget();
       },
@@ -121,11 +190,7 @@ class _CreateInstanceState extends State<CreateInstance> {
           onPressed: isCreating
               ? null
               : () {
-            if (_formKey.currentState!.validate()) {
-              // If the form is valid, display a snackbar. In the real world,
-              // you'd often call a server or save the information in a database.
-              CreateInstance();
-            }
+            createInstance();
           },
           child: isCreating
               ? const SizedBox(
@@ -139,8 +204,10 @@ class _CreateInstanceState extends State<CreateInstance> {
     if (currentStep < steps.length-1) {
       actions.add(ElevatedButton(
           onPressed: () {
-            currentStep++;
-            setState(() {});
+            if(((steps[currentStep].content) as ParentStepChild).canNext()) {
+              currentStep++;
+              setState(() {});
+            }
           },
           child: const Text('Next')));
     }
@@ -156,7 +223,7 @@ class _CreateInstanceState extends State<CreateInstance> {
 
 
     var body = SizedBox(
-      height: 500,
+      height: 450,
       child: stepper,
     );
 

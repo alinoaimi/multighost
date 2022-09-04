@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 
+
 class ParentStepChild extends StatefulWidget {
-  final Widget child;
 
-  ParentStepChild({Key? key, required this.child}) : super(key: key);
+  // Constructor
+  ParentStepChild({Key? key}) : super(key: key);
 
-  final _ParentStepChildState theState = _ParentStepChildState();
+
+  ParentStepChildState _theState = ParentStepChildState();
 
   @override
-  State<ParentStepChild> createState() => theState;
+  ParentStepChildState createState() => _theState;
 
-  bool canNext(){
-    return theState.canNext();
+  bool canNext() {
+    return _theState.canNext();
   }
 
 }
 
-class _ParentStepChildState extends State<ParentStepChild> {
+// FooState
+class ParentStepChildState<T extends ParentStepChild> extends State<T> {
 
   bool canNext() {
     return true;
   }
-
+  // Override build
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return Container();
   }
 }

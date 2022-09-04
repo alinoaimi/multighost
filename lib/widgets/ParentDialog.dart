@@ -9,6 +9,7 @@ class ParentDialog extends StatelessWidget {
   bool? wide = true;
   bool? hideActions = false;
   double? childPadding = 8;
+  VoidCallback? customCancelAction;
 
   ParentDialog(
       {Key? key,
@@ -17,7 +18,8 @@ class ParentDialog extends StatelessWidget {
       this.actions,
       this.wide = true,
       this.hideActions = false,
-      this.childPadding = 8})
+      this.childPadding = 8,
+      this.customCancelAction})
       : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class ParentDialog extends StatelessWidget {
     actions ??= [];
 
     actions?.add(TextButton(
-        onPressed: () {
+        onPressed: customCancelAction ?? () {
           Get.back();
         },
         child: const Text('Cancel')));
@@ -35,7 +37,7 @@ class ParentDialog extends StatelessWidget {
     }
 
     List<Widget> bodyChildren = [];
-    
+
     double paddingToTake = (childPadding ?? 8);
 
     bodyChildren.add(Padding(
@@ -44,10 +46,16 @@ class ParentDialog extends StatelessWidget {
           title,
           style: const TextStyle(fontSize: 17),
         )));
-    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne,));
-    bodyChildren.add(Container(height: 1, color: Colors.grey.withOpacity(0.5),));
+    bodyChildren.add(SizedBox(
+      height: GlobalUtils.standardPaddingOne,
+    ));
+    bodyChildren.add(Container(
+      height: 1,
+      color: Colors.grey.withOpacity(0.5),
+    ));
     bodyChildren.add(Padding(
-      padding: EdgeInsets.fromLTRB(paddingToTake, 0, paddingToTake, paddingToTake),
+      padding:
+          EdgeInsets.fromLTRB(paddingToTake, 0, paddingToTake, paddingToTake),
       child: child,
     ));
 
