@@ -274,7 +274,7 @@ class _InstanceScreenState extends State<InstanceScreen> {
               break;
           }
         },
-        children: [detailsTab, const MountsView(), AliasesView(instanceName: instanceName,)],
+        children: [detailsTab, MountsView(instanceName: instanceName,), AliasesView(instanceName: instanceName,)],
       );
 
       bodyChildren.add(Expanded(

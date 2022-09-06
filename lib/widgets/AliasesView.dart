@@ -38,6 +38,10 @@ class _AliasesViewState extends State<AliasesView> {
         aliases.add(multipassAlias);
       }
 
+      if(widget.instanceName != null) {
+        aliases = aliases.where((element) => element.instance == widget.instanceName).toList();
+      }
+
       isLoading = false;
       setState(() {});
     } catch (ex) {
