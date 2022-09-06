@@ -7,8 +7,12 @@ import 'package:app/widgets/GhostAppBar.dart';
 import 'package:app/widgets/InstanceCard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:iconify_flutter/icons/mdi.dart';
+import 'package:iconify_flutter/icons/zondicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../widgets/LoadingWidget.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -20,12 +24,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   List<MultipassInstanceObject>? list;
   bool isActive = true;
+  bool isInstalled = true;
 
   loadList() async {
     var result = await Process.run('multipass', ['list', '--format=json']);
     try {
+      isInstalled = true;
       list = [];
-      var rawList = json.decode(result.stdout)['list'];
+      var rawList = json.decode(result.stdout)['list']; // replace with list
       for (var rawInstance in rawList) {
         MultipassInstanceObject multipassInstanceObject =
             MultipassInstanceObject(
@@ -37,6 +43,8 @@ class _MainScreenState extends State<MainScreen> {
     } catch (ex) {
       // TODO handle the exception
       debugPrint('error at loadList');
+      isInstalled = false;
+      setState(() {});
     }
     setState(() {});
 
@@ -64,7 +72,41 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     Widget theBody;
 
-    if (list == null) {
+    if (!isInstalled) {
+      theBody = Column(
+        children: [
+          GhostAppBar(),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('Please make sure that Multipass is installed.',),
+                const SizedBox(height: 10,),
+                ElevatedButton(onPressed: () {
+                  
+                  try {
+                    launchUrl(Uri.parse('https://multipass.run/install'));
+                  } catch(ex) {
+                    debugPrint(ex.toString());
+                  }
+
+                }, child: const Text('Install Multipass'),),
+                const SizedBox(height: 3,),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('After installing Multipass'),
+                    TextButton(onPressed: () {}, child: const Text('Click Here')),
+                    const Text('to reload.')
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      );
+    } else if (list == null) {
       theBody = const LoadingWidget();
     } else {
       theBody = const Text('hello world');
@@ -131,7 +173,50 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     return Scaffold(
-      body: theBody,
+      body: Column(
+        children: [
+          Expanded(child: theBody),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Spacer(),
+                TextButton(onPressed: () async {
+                  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+                  showAboutDialog(context: context,
+                      applicationVersion: packageInfo.version,
+                      children: [
+                        const Text('A GUI for Multipass, created using Flutter.'),
+                        const SizedBox(height: 20,),
+                        Row(
+                          children: [
+                            const Text('by Ali Alnoaimi'),
+                            const SizedBox(width: 10,),
+                            IconButton(onPressed: () {
+                              try {
+                                launchUrl(Uri.parse('https://twitter.com/ghost013li'));
+                              } catch(ex) {
+                                debugPrint(ex.toString());
+                              }
+                            }, icon: const Iconify(Mdi.twitter)),
+                            IconButton(onPressed: () {
+                              try {
+                                launchUrl(Uri.parse('https://github.com/alinoaimi'));
+                              } catch(ex) {
+                                debugPrint(ex.toString());
+                              }
+                            }, icon: const Iconify(Mdi.github)),
+                          ],
+                        )
+                      ]
+                  );
+                }, child: const Text('About Multighost'))
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

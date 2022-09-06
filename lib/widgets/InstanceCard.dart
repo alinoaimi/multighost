@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'ControlStateButton.dart';
-import 'package:desktop_multi_window/desktop_multi_window.dart';
 
 import 'InstanceSuspendButton.dart';
 

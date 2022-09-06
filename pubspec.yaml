@@ -36,11 +36,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   process_run: ^0.12.3+2
   flutter_platform_alert: ^0.3.0
-  desktop_multi_window: ^0.2.0
   get: ^4.6.5
   extended_tabs: ^3.0.3
   data_table_2: ^2.3.6
   file_picker: ^5.0.1
+  url_launcher: ^6.1.5
+  package_info_plus: ^1.4.3+1
+  iconify_flutter: ^0.0.4
+  window_manager: ^0.2.7
 
 dev_dependencies:
   flutter_test:

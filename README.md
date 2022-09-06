@@ -1,16 +1,31 @@
-# app
+# Multighost
 
-A UI for multipass
+A UI for multipass created using Flutter
 
-## Getting Started
+Instances List | Creating an Instance
+--- | ---
+![Instances List](/docs/images/screenshots/main.png "Instances List") | ![Create Instance](/docs/images/screenshots/create.png "Create Instance")
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## Install
+
+I am building the packages, will be available soon
+
+## Development
+
+1. Setup Flutter development environment (https://docs.flutter.dev/get-started/install)
+2. Clone this repository
+    
+        git clone https://github.com/alinoaimi/multighost.git
+3. Enter the project directory
+
+        cd multighost
+4. Get Flutter packages
+
+        flutter pub get
+5. Run it
+
+        flutter run

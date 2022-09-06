@@ -2,32 +2,28 @@ import 'dart:convert';
 
 import 'package:app/screens/InstanceScreen.dart';
 import 'package:app/screens/MainScreen.dart';
-import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main(List<String> args) {
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
 
-  bool preventMain = false;
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(800, 700),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
 
   runApp(const MyApp());
-
-  // if (args != null && args.length > 0 && args[0] == 'multi_window') {
-  //   final windowId = int.parse(args[1]);
-  //   final argument = args[2].isEmpty
-  //       ? const {}
-  //       : jsonDecode(args[2]) as Map<String, dynamic>;
-  //
-  //   runApp(MaterialApp(
-  //     color: Colors.white,
-  //     home: InstanceScreen(
-  //       // windowController: WindowController.fromWindowId(windowId),
-  //       // args: argument,
-  //     ),
-  //   ));
-  // } else {
-  //   runApp(const MyApp());
-  // }
 
 
 }

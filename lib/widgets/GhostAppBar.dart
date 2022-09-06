@@ -6,21 +6,30 @@ class GhostAppBar extends StatelessWidget {
   List<Widget>? actions;
   bool? canBack;
 
-  GhostAppBar({Key? key, this.title, this.actions, this.canBack = false}) : super(key: key);
+  GhostAppBar({Key? key, this.title, this.actions, this.canBack = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     List<Widget> headerChildren = [];
 
-    if(canBack != null && canBack!) {
-      headerChildren.add(IconButton(onPressed: () {
-        Get.back();
-      }, icon: const Icon(Icons.keyboard_backspace_outlined)));
+    if (canBack != null && canBack!) {
+      headerChildren.add(Container(
+        child: IconButton(
+            padding: const EdgeInsets.fromLTRB(0, 13, 0, 0),
+            onPressed: () {
+              Get.back();
+            },
+            icon: const Icon(Icons.keyboard_backspace_outlined)),
+      ));
     }
-    
-    headerChildren.add(const Text(
-      'Multighost',
-      style: TextStyle(fontSize: 22),
+
+    headerChildren.add(const Padding(
+      padding: const EdgeInsets.fromLTRB(0, 13, 0, 0),
+      child: Text(
+        'Multighost',
+        style: TextStyle(fontSize: 22),
+      ),
     ));
     headerChildren.add(const Spacer());
 
