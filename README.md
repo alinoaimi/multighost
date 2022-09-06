@@ -7,6 +7,11 @@ Instances List | Creating an Instance
 ![Instances List](/docs/images/screenshots/main.png "Instances List") | ![Create Instance](/docs/images/screenshots/create.png "Create Instance")
 
 
+Instance Details | Creating an Instance
+--- | ---
+![](/docs/images/screenshots/instance.png "Instance Details") | ![](/docs/images/screenshots/create_mount.png "Create a Mount")
+
+
 
 
 
