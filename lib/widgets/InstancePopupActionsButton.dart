@@ -4,6 +4,8 @@ import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
+import '../utils/GlobalUtils.dart';
+
 
 class InstancePopupActionsButton extends StatefulWidget {
   final MultipassInstanceObject instance;
@@ -40,7 +42,7 @@ class _InstancePopupActionsButtonState
             await FlutterPlatformAlert.playAlertSound();
 
             var result = await Process.run(
-                'multipass', ['recover', widget.instance.name]);
+                GlobalUtils.multipassPath, ['recover', widget.instance.name]);
           }));
       menuActions.add(MenuAction(
           id: 'purge',
@@ -57,7 +59,7 @@ class _InstancePopupActionsButtonState
 
             if (clickedButton == AlertButton.yesButton) {
               var result = await Process.run(
-                  'multipass', ['delete', '--purge', widget.instance.name]);
+                  GlobalUtils.multipassPath, ['delete', '--purge', widget.instance.name]);
             }
           }));
     } else {
@@ -68,7 +70,7 @@ class _InstancePopupActionsButtonState
           action: () async {
             await FlutterPlatformAlert.playAlertSound();
             var result = await Process.run(
-                'multipass', ['delete', widget.instance.name]);
+                GlobalUtils.multipassPath, ['delete', widget.instance.name]);
           }));
     }
 

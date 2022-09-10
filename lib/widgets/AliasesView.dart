@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:get/get.dart';
 
+import '../utils/GlobalUtils.dart';
+
 class AliasesView extends StatefulWidget {
   String? instanceName;
 
@@ -22,7 +24,7 @@ class _AliasesViewState extends State<AliasesView> {
   late List<MultipassAlias> aliases;
 
   loadAliases() async {
-    var result = await Process.run('multipass', ['aliases', '--format=json']);
+    var result = await Process.run(GlobalUtils.multipassPath, ['aliases', '--format=json']);
 
     try {
       var rawAliases = jsonDecode(result.stdout)['aliases'];
@@ -59,7 +61,7 @@ class _AliasesViewState extends State<AliasesView> {
   }
 
   deleteAlias(String alias) async {
-    var result = await Process.run('multipass', ['unalias', alias]);
+    var result = await Process.run(GlobalUtils.multipassPath, ['unalias', alias]);
     loadAliases();
   }
 

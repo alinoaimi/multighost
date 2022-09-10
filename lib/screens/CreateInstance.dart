@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../data/MultipassInstanceObject.dart';
+import '../utils/GlobalUtils.dart';
 import '../widgets/ParentDialog.dart';
 
 class CreateInstance extends StatefulWidget {
@@ -71,7 +72,7 @@ class _CreateInstanceState extends State<CreateInstance> {
     debugPrint(stepsData[0].toString());
     debugPrint(command);
 
-    // var process = await Process.start('multipass', command.split(' '));
+    // var process = await Process.start(GlobalUtils.multipassPath, command.split(' '));
     // // process.stdout.pipe(stdout);
     //
     // process.stdout.listen((event) {
@@ -84,7 +85,7 @@ class _CreateInstanceState extends State<CreateInstance> {
     Get.back();
 
     Get.dialog(
-      ProcessWithProgressDialog(title: 'Creating '+stepsData[0]['name'], command: 'multipass', args: command.split(' '))
+      ProcessWithProgressDialog(title: 'Creating '+stepsData[0]['name'], command: GlobalUtils.multipassPath, args: command.split(' '))
     );
 
 

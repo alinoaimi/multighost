@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/GlobalUtils.dart';
+
 class InstanceSuspendButton extends StatefulWidget {
   final MultipassInstanceObject instance;
   bool? condensed = false;
@@ -22,7 +24,7 @@ class _InstanceSuspendButtonState extends State<InstanceSuspendButton> {
     setState(() {});
     if (widget.instance.state! == 'Running') {
       var result =
-          await Process.run('multipass', ['suspend', widget.instance.name]);
+          await Process.run(GlobalUtils.multipassPath, ['suspend', widget.instance.name]);
     }
 
     somethingIsHappening = false;

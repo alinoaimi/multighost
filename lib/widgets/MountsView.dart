@@ -26,7 +26,7 @@ class _MountsViewState extends State<MountsView> {
   late List<MultipassMount> mounts;
 
   loadMounts() async {
-    var result = await Process.run('multipass', ['info', widget.instanceName, '--format=json']);
+    var result = await Process.run(GlobalUtils.multipassPath, ['info', widget.instanceName, '--format=json']);
 
     try {
       var rawMounts = jsonDecode(result.stdout)['info'][widget.instanceName]['mounts'];
@@ -62,7 +62,7 @@ class _MountsViewState extends State<MountsView> {
   }
 
   deleteMount(String destinationPath) async {
-    var result = await Process.run('multipass', ['unmount', '${widget.instanceName}:$destinationPath']);
+    var result = await Process.run(GlobalUtils.multipassPath, ['unmount', '${widget.instanceName}:$destinationPath']);
     loadMounts();
   }
 

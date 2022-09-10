@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../data/MultipassInstanceObject.dart';
+import '../utils/GlobalUtils.dart';
 import '../widgets/ParentDialog.dart';
 
 class CreateMount extends StatefulWidget {
@@ -31,7 +32,7 @@ class _CreateMountState extends State<CreateMount> {
     isCreating = true;
     setState(() {});
 
-    var result = await Process.run('multipass', [
+    var result = await Process.run(GlobalUtils.multipassPath, [
       'mount',
       _sourceController.text,
       '${widget.instanceName}:${_destinationController.text}'
@@ -49,7 +50,7 @@ class _CreateMountState extends State<CreateMount> {
   }
 
   loadInstancesList() async {
-    var result = await Process.run('multipass', ['list', '--format=json']);
+    var result = await Process.run(GlobalUtils.multipassPath, ['list', '--format=json']);
     try {
       list = [];
       var rawList = json.decode(result.stdout)['list'];

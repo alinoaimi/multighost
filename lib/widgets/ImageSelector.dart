@@ -44,7 +44,7 @@ class _ImageSelectorState extends ParentStepChildState<ImageSelector> {
   }
 
   loadImagesList() async {
-    var result = await Process.run('multipass', ['find', '--format=json']);
+    var result = await Process.run(GlobalUtils.multipassPath, ['find', '--format=json']);
     try {
       imagesList = [];
       var rawList = json.decode(result.stdout)['images'];

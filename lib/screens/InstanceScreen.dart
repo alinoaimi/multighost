@@ -42,7 +42,7 @@ class _InstanceScreenState extends State<InstanceScreen> {
 
   loadInstanceInfo() async {
     var result = await Process.run(
-        'multipass', ['info', instanceName, '-v', '--format=json']);
+        GlobalUtils.multipassPath, ['info', instanceName, '-v', '--format=json']);
 
     try {
       var resultDecode = jsonDecode(result.stdout);

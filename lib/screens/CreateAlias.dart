@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../data/MultipassInstanceObject.dart';
+import '../utils/GlobalUtils.dart';
 import '../widgets/ParentDialog.dart';
 
 class CreateAlias extends StatefulWidget {
@@ -31,7 +32,7 @@ class _CreateAliasState extends State<CreateAlias> {
     isCreating = true;
     setState(() {});
 
-    var result = await Process.run('multipass', [
+    var result = await Process.run(GlobalUtils.multipassPath, [
       'alias',
       '${selectedInstance}:${_commandController.text}',
       _aliasController.text
@@ -48,7 +49,7 @@ class _CreateAliasState extends State<CreateAlias> {
   }
 
   loadInstancesList() async {
-    var result = await Process.run('multipass', ['list', '--format=json']);
+    var result = await Process.run(GlobalUtils.multipassPath, ['list', '--format=json']);
     try {
       list = [];
       var rawList = json.decode(result.stdout)['list'];

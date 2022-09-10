@@ -11,6 +11,7 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/zondicons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../utils/GlobalUtils.dart';
 import '../widgets/LoadingWidget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -27,8 +28,18 @@ class _MainScreenState extends State<MainScreen> {
   bool isInstalled = true;
 
   loadList() async {
-    var result = await Process.run('multipass', ['list', '--format=json']);
+
+    list = [];
+
     try {
+
+      // var result = await Process.run('which', [GlobalUtils.multipassPath]);
+      // debugPrint('which output: ');
+      // debugPrint(result.stdout.toString());
+
+
+      var result = await Process.run(GlobalUtils.multipassPath, ['list', '--format=json']);
+
       isInstalled = true;
       list = [];
       var rawList = json.decode(result.stdout)['list']; // replace with list
@@ -43,8 +54,8 @@ class _MainScreenState extends State<MainScreen> {
     } catch (ex) {
       // TODO handle the exception
       debugPrint('error at loadList');
+      debugPrint(ex.toString());
       isInstalled = false;
-      setState(() {});
     }
     setState(() {});
 

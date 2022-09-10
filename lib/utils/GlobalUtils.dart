@@ -34,4 +34,7 @@ class GlobalUtils {
   }
 
   static double standardPaddingOne = 8;
+
+  static String multipassPath = '/usr/local/bin/multipass';
+
 }

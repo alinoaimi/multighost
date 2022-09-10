@@ -4,6 +4,8 @@ import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/GlobalUtils.dart';
+
 class ControlStateButton extends StatefulWidget {
   final MultipassInstanceObject instance;
   bool? condensed = false;
@@ -24,10 +26,10 @@ class _ControlStateButtonState extends State<ControlStateButton> {
     setState(() {});
     if (widget.instance.state! == 'Running') {
       var result =
-          await Process.run('multipass', ['stop', widget.instance.name]);
+          await Process.run(GlobalUtils.multipassPath, ['stop', widget.instance.name]);
     } else if (widget.instance.state! == 'Stopped' || widget.instance.state! == 'Suspended') {
       var result =
-          await Process.run('multipass', ['start', widget.instance.name]);
+          await Process.run(GlobalUtils.multipassPath, ['start', widget.instance.name]);
     }
 
     somethingIsHappening = false;
