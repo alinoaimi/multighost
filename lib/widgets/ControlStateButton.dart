@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/always-native/widgets/NativeIconButton.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,7 @@ class _ControlStateButtonState extends State<ControlStateButton> {
     }
 
     if(widget.condensed!) {
-      return IconButton(onPressed: (somethingIsHappening || widget.instance.state == 'Starting')
+      return NativeIconButton(onPressed: (somethingIsHappening || widget.instance.state == 'Starting')
           ? null
           : () {
         doAction();

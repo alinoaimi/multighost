@@ -44,7 +44,7 @@ class _CreateAliasState extends State<CreateAlias> {
 
     if (widget.onCreated != null) {
       widget.onCreated!();
-      Get.back();
+      Navigator.pop(context);
     }
   }
 

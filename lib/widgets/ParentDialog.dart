@@ -1,6 +1,9 @@
 import 'package:app/utils/GlobalUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:macos_ui/macos_ui.dart';
+
+import '../always-native/widgets/NativeSecondaryButton.dart';
 
 class ParentDialog extends StatelessWidget {
   final String title;
@@ -26,9 +29,9 @@ class ParentDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     actions ??= [];
 
-    actions?.add(TextButton(
+    actions?.add(NativeSecondaryButton(
         onPressed: customCancelAction ?? () {
-          Get.back();
+          Navigator.pop(context);
         },
         child: const Text('Cancel')));
 
@@ -53,10 +56,12 @@ class ParentDialog extends StatelessWidget {
       height: 1,
       color: Colors.grey.withOpacity(0.5),
     ));
-    bodyChildren.add(Padding(
-      padding:
-          EdgeInsets.fromLTRB(paddingToTake, 0, paddingToTake, paddingToTake),
-      child: child,
+    bodyChildren.add(Expanded(
+      child: Padding(
+        padding:
+            EdgeInsets.fromLTRB(paddingToTake, 0, paddingToTake, paddingToTake),
+        child: child,
+      ),
     ));
 
     if (!hideActions! && actions != null) {
@@ -80,7 +85,7 @@ class ParentDialog extends StatelessWidget {
       ));
     }
 
-    return Dialog(
+    return MacosSheet(
       child: Container(
         width: wide! ? 700 : 500,
         child: Column(

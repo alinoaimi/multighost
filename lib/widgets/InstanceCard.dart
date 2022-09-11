@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app/always-native/widgets/NativeListItem.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:app/screens/InstanceScreen.dart';
 import 'package:app/widgets/InstancePopupActionsButton.dart';
@@ -54,7 +55,7 @@ class _InstanceCardState extends State<InstanceCard> {
     TextStyle nameStyle = TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 17,
-        color: state == 'Deleted' ? Colors.grey : Colors.black,
+        // color: state == 'Deleted' ? Colors.grey : Colors.black,
         decoration: state == 'Deleted' ? TextDecoration.lineThrough : null);
 
     rowChildren.add(Padding(
@@ -69,7 +70,7 @@ class _InstanceCardState extends State<InstanceCard> {
                 widget.instance.name,
                 style: nameStyle,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               (widget.internal!
@@ -126,29 +127,17 @@ class _InstanceCardState extends State<InstanceCard> {
       width: 15,
     ));
 
-    return Card(
-      margin: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: InkWell(
-        onTap: widget.internal!
-            ? null
-            : () async {
-                Get.toNamed('/instance', arguments: {
-                  'instance_name': widget.instance.name,
-                  'instance': widget.instance
-                });
-                // Get.to(InstanceScreen());
-                // final window = await DesktopMultiWindow.createWindow(
-                //     jsonEncode({'route': 'instance/${widget.instance.name}'}));
-                // window
-                //   ..setFrame(const Offset(0, 0) & const Size(1280, 720))
-                //   // ..center()
-                //   ..setTitle('Another window')
-                //   ..show();
-              },
-        child: Row(
-          children: rowChildren,
-        ),
+    return NativeListItem(
+      onTap: widget.internal!
+          ? null
+          : () async {
+              Navigator.pushNamed(context, '/instance', arguments: {
+                'instance_name': widget.instance.name,
+                'instance': widget.instance
+              });
+            },
+      child: Row(
+        children: rowChildren,
       ),
     );
   }

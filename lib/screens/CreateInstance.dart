@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/always-native/widgets/NativeButton.dart';
+import 'package:app/always-native/widgets/NativeStepper.dart';
 import 'package:app/data/MultipassImage.dart';
 import 'package:app/screens/ProcessWithProgressDialog.dart';
 import 'package:app/screens/create_instance_steps/NameImageStep.dart';
@@ -13,6 +15,7 @@ import 'package:app/widgets/ParentStepChild.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../always-native/widgets/NativeSecondaryButton.dart';
 import '../data/MultipassInstanceObject.dart';
 import '../utils/GlobalUtils.dart';
 import '../widgets/ParentDialog.dart';
@@ -39,6 +42,7 @@ class _CreateInstanceState extends State<CreateInstance> {
   bool isCreating = false;
   int currentStep = 0;
   String runEventText = 'loading...';
+  List<NativeStepperStep> nativeSteps = [];
 
   createInstance() async {
 
@@ -82,7 +86,7 @@ class _CreateInstanceState extends State<CreateInstance> {
 
     isCreating = false;
     setState(() {});
-    Get.back();
+    Navigator.pop(context);
 
     Get.dialog(
       ProcessWithProgressDialog(title: 'Creating '+stepsData[0]['name'], command: GlobalUtils.multipassPath, args: command.split(' '))
@@ -115,79 +119,66 @@ class _CreateInstanceState extends State<CreateInstance> {
 
   setSteps() {
 
-    stepsWidgets.add(NameImageStep(
+    nativeSteps.add(NativeStepperStep(id: 'image', title: 'Image', content: NameImageStep(
       onDataAvailable: (data) {
         debugPrint(data.toString());
         stepsData[0] = data;
       },
-    ));
+    )));
     stepsData.add({});
-    stepsWidgets.add(ResourcesStep(
+    nativeSteps.add(NativeStepperStep(id: 'resources', title: 'Resources', content: ResourcesStep(
       onDataAvailable: (data) {
         // debugPrint('received data for step 1');
         // debugPrint(data.toString());
         stepsData[1] = data;
       },
-    ));
+    )));
     stepsData.add({});
-    stepsWidgets.add(NetworkStep());
-    stepsData.add({});
+    // stepsWidgets.add(NetworkStep());
+    // stepsData.add({});
 
 
   }
 
-  refreshStepper() {
-    steps = [];
-    steps.add(Step(
-        title: Text('Image'),
-        isActive: currentStep >= 0,
-        state: getStepState(0),
-        content: stepsWidgets[0]));
-    steps.add(Step(
-        title: Text('Resources'),
-        isActive: currentStep >= 1,
-        state: getStepState(1),
-        content: stepsWidgets[1]));
-    // steps.add(Step(
-    //     title: Text('Network'),
-    //     isActive: currentStep >= 2,
-    //     state: getStepState(2),
-    //     content: stepsWidgets[2]));
-  }
 
 
   @override
   Widget build(BuildContext context) {
 
-    refreshStepper();
 
     List<Widget> bodyChildren = [];
 
 
-    var stepper = Stepper(
-      steps: steps,
-      type: StepperType.horizontal,
-      currentStep: currentStep,
-      elevation: 1,
-      // physics: BouncingScrollPhysics(),
-      controlsBuilder: (context, details) {
-        return const EmptyWidget();
-      },
-      onStepContinue: currentStep >= (steps.length - 1)
-          ? null
-          : () {
-              currentStep++;
-              setState(() {});
-            },
-      onStepCancel: () {
-        Get.back();
-      },
+    var stepper = NativeStepper(
+      steps: nativeSteps,
     );
+
+    // var stepper = Material(
+    //   child: Stepper(
+    //     steps: steps,
+    //     type: StepperType.horizontal,
+    //     currentStep: currentStep,
+    //     elevation: 1,
+    //     // physics: BouncingScrollPhysics(),
+    //     controlsBuilder: (context, details) {
+    //       return const EmptyWidget();
+    //     },
+    //     onStepContinue: currentStep >= (steps.length - 1)
+    //         ? null
+    //         : () {
+    //             currentStep++;
+    //             setState(() {});
+    //           },
+    //     onStepCancel: () {
+    //       Navigator.pop(context);
+    //     },
+    //   ),
+    // );
 
     List<Widget> actions = [];
 
     if (currentStep == steps.length-1) {
-      actions.add(ElevatedButton(
+      actions.add(NativeButton(
           onPressed: isCreating
               ? null
               : () {
@@ -203,7 +194,7 @@ class _CreateInstanceState extends State<CreateInstance> {
     }
 
     if (currentStep < steps.length-1) {
-      actions.add(ElevatedButton(
+      actions.add(NativeButton(
           onPressed: () {
             if(((steps[currentStep].content) as ParentStepChild).canNext()) {
               currentStep++;
@@ -214,7 +205,7 @@ class _CreateInstanceState extends State<CreateInstance> {
     }
 
     if (currentStep > 0) {
-      actions.add(TextButton(
+      actions.add(NativeSecondaryButton(
           onPressed: () {
             currentStep--;
             setState(() {});

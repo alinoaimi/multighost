@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/always-native/widgets/NativeMenuButton.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
@@ -31,10 +32,10 @@ class _InstancePopupActionsButtonState
     extends State<InstancePopupActionsButton> {
   @override
   Widget build(BuildContext context) {
-    List<MenuAction> menuActions = [];
+    List<NativeMenuButtonItem> menuActions = [];
 
     if (widget.instance.state == 'Deleted') {
-      menuActions.add(MenuAction(
+      menuActions.add(NativeMenuButtonItem(
           id: 'recover',
           title: 'Recover',
           icon: Icons.monitor_heart_outlined,
@@ -44,7 +45,7 @@ class _InstancePopupActionsButtonState
             var result = await Process.run(
                 GlobalUtils.multipassPath, ['recover', widget.instance.name]);
           }));
-      menuActions.add(MenuAction(
+      menuActions.add(NativeMenuButtonItem(
           id: 'purge',
           title: 'Purge',
           icon: Icons.delete,
@@ -63,7 +64,7 @@ class _InstancePopupActionsButtonState
             }
           }));
     } else {
-      menuActions.add(MenuAction(
+      menuActions.add(NativeMenuButtonItem(
           id: 'delete',
           title: 'Delete',
           icon: Icons.delete,
@@ -74,35 +75,13 @@ class _InstancePopupActionsButtonState
           }));
     }
 
-    List<PopupMenuEntry<int>> popupItems = [];
+    return NativeMenuButton(icon: Icons.more_vert, items: menuActions);
 
-    int index = -1;
-    for (MenuAction action in menuActions) {
-      index++;
-      popupItems.add(
-          // popupmenu item 2
-          PopupMenuItem(
-        value: index,
-        // row has two child icon and text
-        onTap: action.action,
-        child: Row(
-          children: [
-            Icon(action.icon),
-            SizedBox(
-              // sized box with width 10
-              width: 10,
-            ),
-            Text(action.title!)
-          ],
-        ),
-      ));
-    }
-
-    return PopupMenuButton<int>(
-      icon: Icon(Icons.more_vert),
-      itemBuilder: (context) => popupItems,
-      offset: Offset(0, 40),
-      elevation: 2,
-    );
+    // return PopupMenuButton<int>(
+    //   icon: Icon(Icons.more_vert),
+    //   itemBuilder: (context) => popupItems,
+    //   offset: Offset(0, 40),
+    //   elevation: 2,
+    // );
   }
 }

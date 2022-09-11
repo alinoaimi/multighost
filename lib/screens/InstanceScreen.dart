@@ -34,7 +34,7 @@ class InstanceTab {
 class _InstanceScreenState extends State<InstanceScreen> {
   bool isLoading = true;
   bool isActive = true;
-  late String instanceName;
+  String? instanceName;
   MultipassInstanceObject? instance;
   String selectedTab = 'details';
   final PageController _pageController =
@@ -42,14 +42,14 @@ class _InstanceScreenState extends State<InstanceScreen> {
 
   loadInstanceInfo() async {
     var result = await Process.run(
-        GlobalUtils.multipassPath, ['info', instanceName, '-v', '--format=json']);
+        GlobalUtils.multipassPath, ['info', instanceName!, '-v', '--format=json']);
 
     try {
       var resultDecode = jsonDecode(result.stdout);
       var rawInstance = resultDecode['info'][instanceName];
 
       instance = MultipassInstanceObject(
-          name: instanceName,
+          name: instanceName!,
           release: rawInstance['release'] ?? rawInstance['image_release'],
           state: rawInstance['state']);
 
@@ -104,16 +104,32 @@ class _InstanceScreenState extends State<InstanceScreen> {
   @override
   void initState() {
     super.initState();
-    instanceName = Get.arguments['instance_name'];
-    instance = Get.arguments['instance'];
 
+    // final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+    // debugPrint('the args: ');
+    // debugPrint(arguments.toString());
 
-
-    loadInstanceInfo();
+    // instanceName = Get.arguments['instance_name'];
+    // instance = Get.arguments['instance'];
+    //
+    //
+    //
+    // loadInstanceInfo();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    if(instanceName == null) {
+      final args = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+
+      instanceName = args['instance_name'];
+      instance = args['instance'];
+
+      loadInstanceInfo();
+
+    }
+
     List<Widget> bodyChildren = [];
 
     bodyChildren.add(GhostAppBar(
@@ -274,7 +290,7 @@ class _InstanceScreenState extends State<InstanceScreen> {
               break;
           }
         },
-        children: [detailsTab, MountsView(instanceName: instanceName,), AliasesView(instanceName: instanceName,)],
+        children: [detailsTab, MountsView(instanceName: instanceName!,), AliasesView(instanceName: instanceName,)],
       );
 
       bodyChildren.add(Expanded(

@@ -2,6 +2,8 @@ PODS:
   - flutter_platform_alert (0.0.1):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
+  - macos_ui (0.1.0):
+    - FlutterMacOS
   - package_info_plus_macos (0.0.1):
     - FlutterMacOS
   - screen_retriever (0.0.1):
@@ -14,6 +16,7 @@ PODS:
 DEPENDENCIES:
   - flutter_platform_alert (from `Flutter/ephemeral/.symlinks/plugins/flutter_platform_alert/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - macos_ui (from `Flutter/ephemeral/.symlinks/plugins/macos_ui/macos`)
   - package_info_plus_macos (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos`)
   - screen_retriever (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
@@ -24,6 +27,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/flutter_platform_alert/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
+  macos_ui:
+    :path: Flutter/ephemeral/.symlinks/plugins/macos_ui/macos
   package_info_plus_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus_macos/macos
   screen_retriever:
@@ -36,6 +41,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   flutter_platform_alert: b21b2b7d801e71c12ce9ffab618ff114ca9fc903
   FlutterMacOS: ae6af50a8ea7d6103d888583d46bd8328a7e9811
+  macos_ui: 125c911559d646194386d84c017ad6819122e2db
   package_info_plus_macos: f010621b07802a241d96d01876d6705f15e77c1c
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
   url_launcher_macos: 597e05b8e514239626bcf4a850fcf9ef5c856ec3

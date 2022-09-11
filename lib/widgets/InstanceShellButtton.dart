@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:process_run/shell.dart';
 import 'package:process_run/which.dart';
 
+import '../always-native/widgets/NativeIconButton.dart';
+
 class InstanceShellButton extends StatefulWidget {
   final MultipassInstanceObject instance;
   bool? condensed = false;
@@ -54,11 +56,11 @@ osascript -e 'tell app "Terminal"' -e 'do script "multipass shell ${widget.insta
     }
 
     if (widget.condensed!) {
-      return IconButton(
+      return NativeIconButton(
           onPressed: () {
             openShell();
           },
-          icon: const Icon(Icons.terminal));
+          icon: const Icon(Icons.terminal,));
     }
 
     return SizedBox(

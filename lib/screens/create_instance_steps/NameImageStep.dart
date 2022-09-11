@@ -2,6 +2,7 @@ import 'package:app/utils/GlobalUtils.dart';
 import 'package:app/widgets/ImageSelector.dart';
 import 'package:app/widgets/ParentStepChild.dart';
 import 'package:flutter/material.dart';
+import 'package:macos_ui/macos_ui.dart';
 
 
 
@@ -59,33 +60,35 @@ class NameImageStepState extends ParentStepChildState<NameImageStep> with Automa
 
     return SizedBox(
       height: 370,
-      child: Form(
-        key: formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _nameController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Required';
-                }
-                return null;
-              },
-              decoration: const InputDecoration(
-                labelText: 'Instance name',
+      child: MacosWindow(
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: _nameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Required';
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Instance name',
+                ),
               ),
-            ),
-            SizedBox(height: GlobalUtils.standardPaddingOne,),
-            ImageSelector(
-              onDataAvailable: (data) {
-                debugPrint('received from image selector: ');
-                debugPrint(data.toString());
-                selectedImage = data['image'];
-              },
-            )
-          ],
+              SizedBox(height: GlobalUtils.standardPaddingOne,),
+              ImageSelector(
+                onDataAvailable: (data) {
+                  debugPrint('received from image selector: ');
+                  debugPrint(data.toString());
+                  selectedImage = data['image'];
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

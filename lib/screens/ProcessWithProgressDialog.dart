@@ -112,7 +112,7 @@ class _ProcessWithProgressDialogState extends State<ProcessWithProgressDialog> {
     List<Widget> actions = [];
     if(status == 'complete') {
       actions.add(ElevatedButton(onPressed: () {
-        Get.back();
+        Navigator.pop(context);
       }, child: const Text('Back to list')));
     }
 
@@ -122,7 +122,7 @@ class _ProcessWithProgressDialogState extends State<ProcessWithProgressDialog> {
       hideActions: false,
       customCancelAction: status == 'complete' ? null : () async {
         if(process.kill()) {
-          Get.back();
+          Navigator.pop(context);
         }
       },
       actions: actions

@@ -45,7 +45,7 @@ class _CreateMountState extends State<CreateMount> {
 
     if (widget.onCreated != null) {
       widget.onCreated!();
-      Get.back();
+      Navigator.pop(context);
     }
   }
 

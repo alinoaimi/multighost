@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:macos_ui/macos_ui.dart';
 
 class GhostAppBar extends StatelessWidget {
   String? title;
@@ -11,6 +12,14 @@ class GhostAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    return Container(
+      height: 100,
+      child: ToolBar(
+        title: const Text('Untitled Docussment'),
+      ),
+    );
+
     List<Widget> headerChildren = [];
 
     if (canBack != null && canBack!) {
@@ -18,7 +27,7 @@ class GhostAppBar extends StatelessWidget {
         child: IconButton(
             padding: const EdgeInsets.fromLTRB(0, 13, 0, 0),
             onPressed: () {
-              Get.back();
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.keyboard_backspace_outlined)),
       ));
@@ -45,6 +54,8 @@ class GhostAppBar extends StatelessWidget {
         children: headerChildren,
       ),
     );
+
+
 
     return header;
   }
