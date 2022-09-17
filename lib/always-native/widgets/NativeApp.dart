@@ -20,6 +20,9 @@ class NativeApp extends StatefulWidget {
 class _NativeAppState extends State<NativeApp> {
   @override
   Widget build(BuildContext context) {
+
+
+
     return MacosApp(
       title: widget.title,
       debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,

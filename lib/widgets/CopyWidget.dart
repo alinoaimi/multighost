@@ -1,3 +1,4 @@
+import 'package:app/always-native/data/NativeColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -20,9 +21,9 @@ class _CopyWidgetState extends State<CopyWidget> {
     List<Widget> children = [];
 
     if(widget.label != null) {
-      children.add(Text('${widget.label!}: '));
+      children.add(Text('${widget.label!}: ',));
     }
-    children.add(SelectableText(widget.value));
+    children.add(SelectableText(widget.value,));
 
     children.add(IconButton(
         padding: EdgeInsets.zero,
@@ -30,10 +31,11 @@ class _CopyWidgetState extends State<CopyWidget> {
         onPressed: () {
           Clipboard.setData(ClipboardData(text: widget.value));
       // do copy
-    }, icon: const Icon(Icons.copy, size: 13.5,)));
+    }, icon: const Icon(Icons.copy, size: 13.5)));
 
     return Card(
       margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+      // color: NativeColors.cardBackground,
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Row(

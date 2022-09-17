@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/always-native/actions/DialogsSheetsActions.dart';
+import 'package:app/always-native/data/NativeColor.dart';
+import 'package:app/always-native/widgets/NativeButton.dart';
 import 'package:app/data/MultipassAlias.dart';
 import 'package:app/screens/CreateAlias.dart';
 import 'package:app/widgets/LoadingWidget.dart';
@@ -24,7 +27,8 @@ class _AliasesViewState extends State<AliasesView> {
   late List<MultipassAlias> aliases;
 
   loadAliases() async {
-    var result = await Process.run(GlobalUtils.multipassPath, ['aliases', '--format=json']);
+    var result = await Process.run(
+        GlobalUtils.multipassPath, ['aliases', '--format=json']);
 
     try {
       var rawAliases = jsonDecode(result.stdout)['aliases'];
@@ -40,8 +44,10 @@ class _AliasesViewState extends State<AliasesView> {
         aliases.add(multipassAlias);
       }
 
-      if(widget.instanceName != null) {
-        aliases = aliases.where((element) => element.instance == widget.instanceName).toList();
+      if (widget.instanceName != null) {
+        aliases = aliases
+            .where((element) => element.instance == widget.instanceName)
+            .toList();
       }
 
       isLoading = false;
@@ -61,7 +67,8 @@ class _AliasesViewState extends State<AliasesView> {
   }
 
   deleteAlias(String alias) async {
-    var result = await Process.run(GlobalUtils.multipassPath, ['unalias', alias]);
+    var result =
+        await Process.run(GlobalUtils.multipassPath, ['unalias', alias]);
     loadAliases();
   }
 
@@ -74,10 +81,11 @@ class _AliasesViewState extends State<AliasesView> {
     List<DataRow> dataRows = [];
 
     for (MultipassAlias alias in aliases) {
-      Widget deleteBtn =
-          IconButton(onPressed: () {
+      Widget deleteBtn = IconButton(
+          onPressed: () {
             deleteAlias(alias.alias!);
-          }, icon: const Icon(Icons.delete));
+          },
+          icon: const Icon(Icons.delete));
 
       dataRows.add(DataRow(cells: [
         DataCell(Text(
@@ -97,20 +105,30 @@ class _AliasesViewState extends State<AliasesView> {
     ));
     bodyChildren.add(Row(
       children: [
-        OutlinedButton.icon(
-            onPressed: () {
-              Get.dialog(CreateAlias(
-                instanceName: widget.instanceName,
-                onCreated: () {
-                  loadAliases();
-                },
-              ));
-            },
-            icon: const Icon(
-              Icons.add,
-              size: 14,
-            ),
-            label: const Text('Create an Alias'))
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+          child: NativeButton(
+              onPressed: () {
+                DialogsSheetsActions.nativeShowSheet(
+                    child: CreateAlias(
+                      instanceName: widget.instanceName,
+                      onCreated: () {
+                        loadAliases();
+                      },
+                    ),
+                    context: context,
+                    barrierDismissible: true);
+
+                // Get.dialog(CreateAlias(
+                //   instanceName: widget.instanceName,
+                //   onCreated: () {
+                //     loadAliases();
+                //   },
+                // ));
+              },
+              icon: Icons.add,
+              child: const Text('Create an Alias')),
+        )
       ],
     ));
 
@@ -121,7 +139,9 @@ class _AliasesViewState extends State<AliasesView> {
           minWidth: 600,
           columns: const [
             DataColumn2(
-              label: Text('Alias'),
+              label: Text(
+                'Alias',
+              ),
               size: ColumnSize.L,
             ),
             DataColumn(
@@ -137,12 +157,22 @@ class _AliasesViewState extends State<AliasesView> {
           rows: dataRows),
     ));
 
-    return Column(
-      children: bodyChildren,
+    return Material(
+      color: Colors.transparent,
+      child: Theme(
+        data: ThemeData(
+            brightness:
+                (MediaQuery.platformBrightnessOf(context) == Brightness.dark)
+                    ? Brightness.dark
+                    : Brightness.light),
+        child: Column(
+          children: bodyChildren,
+        ),
+      ),
     );
 
-    return Container(
-      child: Text('aliases view'),
-    );
+    // return Container(
+    //   child: Text('aliases view'),
+    // );
   }
 }

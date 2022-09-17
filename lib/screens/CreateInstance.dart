@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/always-native/widgets/NativeButton.dart';
-import 'package:app/always-native/widgets/NativeStepper.dart';
+import 'package:app/always-native/widgets/NativeSecondaryButton.dart';
 import 'package:app/data/MultipassImage.dart';
 import 'package:app/screens/ProcessWithProgressDialog.dart';
 import 'package:app/screens/create_instance_steps/NameImageStep.dart';
@@ -15,7 +15,7 @@ import 'package:app/widgets/ParentStepChild.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../always-native/widgets/NativeSecondaryButton.dart';
+import '../always-native/actions/DialogsSheetsActions.dart';
 import '../data/MultipassInstanceObject.dart';
 import '../utils/GlobalUtils.dart';
 import '../widgets/ParentDialog.dart';
@@ -42,12 +42,8 @@ class _CreateInstanceState extends State<CreateInstance> {
   bool isCreating = false;
   int currentStep = 0;
   String runEventText = 'loading...';
-  List<NativeStepperStep> nativeSteps = [];
 
   createInstance() async {
-
-
-
     isCreating = true;
     setState(() {});
 
@@ -88,13 +84,12 @@ class _CreateInstanceState extends State<CreateInstance> {
     setState(() {});
     Navigator.pop(context);
 
-    Get.dialog(
-      ProcessWithProgressDialog(title: 'Creating '+stepsData[0]['name'], command: GlobalUtils.multipassPath, args: command.split(' '))
-    );
-
-
-
-
+    DialogsSheetsActions.nativeShowSheet(
+        child: ProcessWithProgressDialog(
+            title: 'Creating ' + stepsData[0]['name'],
+            command: GlobalUtils.multipassPath,
+            args: command.split(' ')),
+        context: context);
   }
 
   @override
@@ -118,85 +113,92 @@ class _CreateInstanceState extends State<CreateInstance> {
   List<ParentStepChild> stepsWidgets = [];
 
   setSteps() {
-
-    nativeSteps.add(NativeStepperStep(id: 'image', title: 'Image', content: NameImageStep(
+    stepsWidgets.add(NameImageStep(
       onDataAvailable: (data) {
         debugPrint(data.toString());
         stepsData[0] = data;
       },
-    )));
+    ));
     stepsData.add({});
-    nativeSteps.add(NativeStepperStep(id: 'resources', title: 'Resources', content: ResourcesStep(
+    stepsWidgets.add(ResourcesStep(
       onDataAvailable: (data) {
         // debugPrint('received data for step 1');
         // debugPrint(data.toString());
         stepsData[1] = data;
       },
-    )));
+    ));
     stepsData.add({});
-    // stepsWidgets.add(NetworkStep());
-    // stepsData.add({});
-
-
+    stepsWidgets.add(NetworkStep());
+    stepsData.add({});
   }
 
-
+  refreshStepper() {
+    steps = [];
+    steps.add(Step(
+        title: Text('Image'),
+        isActive: currentStep >= 0,
+        state: getStepState(0),
+        content: stepsWidgets[0]));
+    steps.add(Step(
+        title: Text('Resources'),
+        isActive: currentStep >= 1,
+        state: getStepState(1),
+        content: stepsWidgets[1]));
+    // steps.add(Step(
+    //     title: Text('Network'),
+    //     isActive: currentStep >= 2,
+    //     state: getStepState(2),
+    //     content: stepsWidgets[2]));
+  }
 
   @override
   Widget build(BuildContext context) {
-
+    refreshStepper();
 
     List<Widget> bodyChildren = [];
 
-
-    var stepper = NativeStepper(
-      steps: nativeSteps,
+    var stepper = Stepper(
+      steps: steps,
+      type: StepperType.horizontal,
+      currentStep: currentStep,
+      elevation: 1,
+      // physics: BouncingScrollPhysics(),
+      controlsBuilder: (context, details) {
+        return const EmptyWidget();
+      },
+      onStepContinue: currentStep >= (steps.length - 1)
+          ? null
+          : () {
+              currentStep++;
+              setState(() {});
+            },
+      onStepCancel: () {
+        Navigator.pop(context);
+      },
     );
-
-    // var stepper = Material(
-    //   child: Stepper(
-    //     steps: steps,
-    //     type: StepperType.horizontal,
-    //     currentStep: currentStep,
-    //     elevation: 1,
-    //     // physics: BouncingScrollPhysics(),
-    //     controlsBuilder: (context, details) {
-    //       return const EmptyWidget();
-    //     },
-    //     onStepContinue: currentStep >= (steps.length - 1)
-    //         ? null
-    //         : () {
-    //             currentStep++;
-    //             setState(() {});
-    //           },
-    //     onStepCancel: () {
-    //       Navigator.pop(context);
-    //     },
-    //   ),
-    // );
 
     List<Widget> actions = [];
 
-    if (currentStep == steps.length-1) {
+    if (currentStep == steps.length - 1) {
       actions.add(NativeButton(
           onPressed: isCreating
               ? null
               : () {
-            createInstance();
-          },
+                  createInstance();
+                },
           child: isCreating
               ? const SizedBox(
-            height: 15,
-            width: 15,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          )
+                  height: 15,
+                  width: 15,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
               : const Text('Create')));
     }
 
-    if (currentStep < steps.length-1) {
+    if (currentStep < steps.length - 1) {
       actions.add(NativeButton(
           onPressed: () {
-            if(((steps[currentStep].content) as ParentStepChild).canNext()) {
+            if (((steps[currentStep].content) as ParentStepChild).canNext()) {
               currentStep++;
               setState(() {});
             }
@@ -213,7 +215,6 @@ class _CreateInstanceState extends State<CreateInstance> {
           child: const Text('Back')));
     }
 
-
     var body = SizedBox(
       height: 450,
       child: stepper,
@@ -224,6 +225,8 @@ class _CreateInstanceState extends State<CreateInstance> {
         childPadding: 0,
         // hideActions: true,
         actions: actions,
-        child: body);
+        child: Material(
+            color: Colors.transparent,
+            child: body));
   }
 }

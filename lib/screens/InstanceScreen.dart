@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/always-native/widgets/NativeAppBar.dart';
+import 'package:app/always-native/widgets/NativeTabs.dart';
 import 'package:app/data/MultipassDisk.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:app/data/MultipassMemory.dart';
@@ -15,6 +17,9 @@ import 'package:app/widgets/MemoryWidget.dart';
 import 'package:app/widgets/MountsView.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:macos_ui/macos_ui.dart';
+
+import '../always-native/widgets/NativeWindow.dart';
 
 class InstanceScreen extends StatefulWidget {
   const InstanceScreen({Key? key}) : super(key: key);
@@ -33,6 +38,7 @@ class InstanceTab {
 
 class _InstanceScreenState extends State<InstanceScreen> {
   bool isLoading = true;
+  bool isLoadingDone = false;
   bool isActive = true;
   String? instanceName;
   MultipassInstanceObject? instance;
@@ -85,6 +91,12 @@ class _InstanceScreenState extends State<InstanceScreen> {
     }
 
     isLoading = false;
+    Future.delayed(const Duration(milliseconds: 10), () {
+      isLoadingDone = true;
+      setState(() {
+
+      });
+    });
     setState(() {});
 
     Future.delayed(const Duration(milliseconds: 200), () {
@@ -132,57 +144,41 @@ class _InstanceScreenState extends State<InstanceScreen> {
 
     List<Widget> bodyChildren = [];
 
-    bodyChildren.add(GhostAppBar(
-      canBack: true,
+    bodyChildren.add(SizedBox(
+     height: 50,
+      child: NativeAppBar(
+        title: instanceName,
+        canBack: true,
+      ),
     ));
 
-    List<InstanceTab> tabs = [
-      InstanceTab(index: 0, id: 'details', label: 'Details'),
-      InstanceTab(index: 1, id: 'mounts', label: 'Mounts'),
-      InstanceTab(index: 2, id: 'aliases', label: 'Aliases'),
-    ];
-    List<Widget> tabsButtons = [];
-    for (InstanceTab tab in tabs) {
-      // TODO I'm not happy with this design, it's meant to be temporary, I'll fix it later
-      tabsButtons.add(Container(
-          decoration: BoxDecoration(
-              color: selectedTab == tab.id ? Colors.blueAccent : null,
-          ),
-          child: InkWell(
-              onTap: () {
-                selectedTab = tab.id;
-                _pageController.animateToPage(tab.index,
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    duration: const Duration(milliseconds: 200));
-              },
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
-                child: Text(tab.label!),
-              ))));
-    }
 
-    if (isLoading) {
+
+    if (isLoading)
+    {
       if (instance != null) {
-        bodyChildren.add(Padding(
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-          child: InstanceCard(
-            instance: instance!,
-            internal: true,
+        bodyChildren.add(SizedBox(
+          height: 100,
+          child: Container(
+            // padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+            child: InstanceCard(
+              instance: instance!,
+              internal: true,
+            ),
           ),
         ));
       }
-      bodyChildren.add(const Expanded(child: LoadingWidget()));
-    } else {
-      bodyChildren.add(Padding(
-        padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-        child: InstanceCard(instance: instance!, internal: true),
-      ));
-      bodyChildren.add(Padding(
-        padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-        child: Row(
-          children: tabsButtons,
+      bodyChildren.add(const Flexible(flex: 9, child: LoadingWidget()));
+    } else
+    {
+      bodyChildren.add(SizedBox(
+        height: 100,
+        child: Container(
+          // padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+          child: InstanceCard(instance: instance!, internal: true),
         ),
       ));
+
 
       Widget tabsView;
       tabsView = const Text('wait');
@@ -270,39 +266,39 @@ class _InstanceScreenState extends State<InstanceScreen> {
         }
       }
 
-      var detailsTab = Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: detailsTabChildren,
-      );
-
-      tabsView = PageView(
-        controller: _pageController,
-        onPageChanged: (currentPageIndex) {
-          switch(currentPageIndex) {
-            case 0:
-              selectedTab = 'details';
-              break;
-            case 1:
-              selectedTab = 'mounts';
-              break;
-            case 2:
-              selectedTab = 'aliases';
-              break;
-          }
-        },
-        children: [detailsTab, MountsView(instanceName: instanceName!,), AliasesView(instanceName: instanceName,)],
-      );
-
-      bodyChildren.add(Expanded(
+      var detailsTab = Theme(
+        data: ThemeData(brightness: ( MediaQuery.platformBrightnessOf(context) == Brightness.dark) ? Brightness.dark : Brightness.light),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-          child: tabsView,
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: detailsTabChildren,
+          ),
+        ),
+      );
+
+
+
+      List<NativeTabsTab> tabs = [
+        NativeTabsTab(id: 'details', title: 'Details', content: detailsTab),
+        NativeTabsTab( id: 'mounts', title: 'Mounts', content: MountsView(instanceName: instanceName!,)),
+        NativeTabsTab( id: 'aliases', title: 'Aliases', content: AliasesView(instanceName: instanceName,)),
+      ];
+
+      bodyChildren.add(Flexible(
+        flex: 9,
+        child: AnimatedOpacity(
+          opacity: isLoadingDone ? 1 : 0,
+          duration: const Duration(milliseconds: 200),
+          // padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          child: NativeTabs(tabs: tabs,),
         ),
       ));
     }
 
-    return Scaffold(
-        body: Column(
+    return NativeWindow(
+      windowTitle: 'MultiGhost',
+        child: Column(
       children: bodyChildren,
     ));
   }

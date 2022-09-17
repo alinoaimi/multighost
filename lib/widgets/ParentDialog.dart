@@ -13,6 +13,7 @@ class ParentDialog extends StatelessWidget {
   bool? hideActions = false;
   double? childPadding = 8;
   VoidCallback? customCancelAction;
+  bool actionsSet = false;
 
   ParentDialog(
       {Key? key,
@@ -27,16 +28,21 @@ class ParentDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    actions ??= [];
 
-    actions?.add(NativeSecondaryButton(
-        onPressed: customCancelAction ?? () {
-          Navigator.pop(context);
-        },
-        child: const Text('Cancel')));
 
-    if (actions!.length > 1) {
-      actions = actions?.reversed.toList();
+    if(!actionsSet) {
+      actions ??= [];
+
+      actions?.add(NativeSecondaryButton(
+          onPressed: customCancelAction ?? () {
+            Navigator.pop(context);
+          },
+          child: const Text('Cancel')));
+
+      if (actions!.length > 1) {
+        actions = actions?.reversed.toList();
+      }
+      actionsSet = true;
     }
 
     List<Widget> bodyChildren = [];
@@ -85,13 +91,17 @@ class ParentDialog extends StatelessWidget {
       ));
     }
 
+
     return MacosSheet(
-      child: Container(
+      child: SizedBox(
         width: wide! ? 700 : 500,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: bodyChildren,
+        child: Theme(
+          data: ThemeData(brightness: ( MediaQuery.platformBrightnessOf(context) == Brightness.dark) ? Brightness.dark : Brightness.light),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: bodyChildren,
+          ),
         ),
       ),
     );

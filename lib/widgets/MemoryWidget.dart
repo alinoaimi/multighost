@@ -1,3 +1,4 @@
+import 'package:app/always-native/data/NativeColor.dart';
 import 'package:app/data/MultipassDisk.dart';
 import 'package:app/data/MultipassMemory.dart';
 import 'package:app/utils/GlobalUtils.dart';
@@ -28,6 +29,8 @@ class MemoryWidget extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
       margin: EdgeInsets.zero,
+      // color: Colors.white.withOpacity(0.2),
+      // color: NativeColors.cardBackground,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,7 +45,7 @@ class MemoryWidget extends StatelessWidget {
                     SizedBox(
                       width: 10,
                     ),
-                    Text('Memory')
+                    Text('Memory',)
                   ],
                 ),
                 const SizedBox(

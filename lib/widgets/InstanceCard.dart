@@ -117,8 +117,10 @@ class _InstanceCardState extends State<InstanceCard> {
       ));
       rowChildren.add(InstanceSuspendButton(
           instance: widget.instance, condensed: !widget.internal!));
+      rowChildren.add(const SizedBox(
+        width: 10,
+      ));
     }
-
     rowChildren.add(InstancePopupActionsButton(
       instance: widget.instance,
     ));

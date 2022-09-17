@@ -60,35 +60,33 @@ class NameImageStepState extends ParentStepChildState<NameImageStep> with Automa
 
     return SizedBox(
       height: 370,
-      child: MacosWindow(
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _nameController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Instance name',
-                ),
+      child: Form(
+        key: formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              controller: _nameController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Required';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                labelText: 'Instance name',
               ),
-              SizedBox(height: GlobalUtils.standardPaddingOne,),
-              ImageSelector(
-                onDataAvailable: (data) {
-                  debugPrint('received from image selector: ');
-                  debugPrint(data.toString());
-                  selectedImage = data['image'];
-                },
-              )
-            ],
-          ),
+            ),
+            SizedBox(height: GlobalUtils.standardPaddingOne,),
+            ImageSelector(
+              onDataAvailable: (data) {
+                debugPrint('received from image selector: ');
+                debugPrint(data.toString());
+                selectedImage = data['image'];
+              },
+            )
+          ],
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/always-native/widgets/NativeButton.dart';
 import 'package:app/always-native/widgets/NativeIconButton.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/material.dart';
@@ -63,18 +64,14 @@ class _InstanceSuspendButtonState extends State<InstanceSuspendButton> {
       }, icon: Icon(icon));
     }
 
-    return OutlinedButton(
+    return NativeButton(
       onPressed: (somethingIsHappening || widget.instance.state == 'Starting')
           ? null
           : () {
               doAction();
             },
-      style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(color),
-      ),
-      child: Row(
-        children: btnChildren,
-      ),
+      child: Text(text),
+      icon: icon,
     );
   }
 }

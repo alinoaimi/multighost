@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/always-native/data/NativeColor.dart';
+import 'package:app/always-native/widgets/NativeButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,7 +30,6 @@ class _CreateAliasState extends State<CreateAlias> {
   bool isCreating = false;
 
   createAlias() async {
-
     isCreating = true;
     setState(() {});
 
@@ -49,7 +50,8 @@ class _CreateAliasState extends State<CreateAlias> {
   }
 
   loadInstancesList() async {
-    var result = await Process.run(GlobalUtils.multipassPath, ['list', '--format=json']);
+    var result =
+        await Process.run(GlobalUtils.multipassPath, ['list', '--format=json']);
     try {
       list = [];
       var rawList = json.decode(result.stdout)['list'];
@@ -135,7 +137,8 @@ class _CreateAliasState extends State<CreateAlias> {
     ));
 
     List<Widget> actions = [];
-    actions.add(ElevatedButton(
+
+    actions.add(NativeButton(
         onPressed: isCreating
             ? null
             : () {
@@ -160,10 +163,15 @@ class _CreateAliasState extends State<CreateAlias> {
       ),
     );
 
+
+
     return ParentDialog(
       title: 'Create an Alias',
       actions: actions,
-      child: body,
+      child: Material(
+        color: Colors.transparent,
+        child: body,
+      ),
     );
   }
 }

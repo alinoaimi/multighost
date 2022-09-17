@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/always-native/widgets/NativeCircularProgressIndicator.dart';
 import 'package:app/utils/GlobalUtils.dart';
 import 'package:app/widgets/ParentStepChild.dart';
 import 'package:flutter/material.dart';
@@ -190,8 +191,8 @@ class _ImageSelectorState extends ParentStepChildState<ImageSelector> {
             SizedBox(height: 20,),
             Row(
               children: [
-                const SizedBox(
-                    height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2,)),
+                SizedBox(
+                    height: 16, width: 16, child: NativeCircularProgressIndicator()),
                 SizedBox(
                   width: GlobalUtils.standardPaddingOne,
                 ),
@@ -244,12 +245,12 @@ class _ImageSelectorState extends ParentStepChildState<ImageSelector> {
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
                   boxSelectorItem.assetImage,
-                  height: 70,
+                  height: 40,
                 ),
                 const SizedBox(
                   height: 5,

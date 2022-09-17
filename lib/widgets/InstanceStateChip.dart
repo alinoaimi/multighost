@@ -1,5 +1,7 @@
+import 'package:app/always-native/widgets/NativeCircularProgressIndicator.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 
 class InstanceStateChip extends StatelessWidget {
@@ -25,7 +27,7 @@ class InstanceStateChip extends StatelessWidget {
     Widget stateAvatar;
 
     if (instance.state! == 'Starting') {
-      stateAvatar = const CircularProgressIndicator(strokeWidth: 2.5);
+      stateAvatar = NativeCircularProgressIndicator(width: 7.5, color: Colors.black,);
     } else {
       stateAvatar = CircleAvatar(
         backgroundColor: stateColor,
@@ -44,7 +46,7 @@ class InstanceStateChip extends StatelessWidget {
 
     if (!condensed!) {
       children.add(const SizedBox(width: 5,));
-      children.add(Text(instance.state!, style: const TextStyle(fontSize: 13),));
+      children.add(Text(instance.state!, style: const TextStyle(fontSize: 13, color: Colors.black),));
       children.add(const SizedBox(width: 5,));
 
     }

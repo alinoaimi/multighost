@@ -201,6 +201,7 @@ class _MainScreenState extends State<MainScreen> {
                       showAboutDialog(
                           context: context,
                           applicationVersion: packageInfo.version,
+                          applicationIcon: SizedBox(height: 48, child: Image.asset('assets/images/rounded-icon.png'),),
                           children: [
                             const Text(
                                 'A GUI for Multipass, created using Flutter.'),

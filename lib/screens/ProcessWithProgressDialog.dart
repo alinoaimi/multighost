@@ -107,7 +107,9 @@ class _ProcessWithProgressDialogState extends State<ProcessWithProgressDialog> {
   Widget build(BuildContext context) {
     var body;
 
-    body = SelectableText(progressText);
+    body = SingleChildScrollView(
+      child: SelectableText(progressText),
+    );
 
     List<Widget> actions = [];
     if(status == 'complete') {

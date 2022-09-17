@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/always-native/widgets/NativeButton.dart';
 import 'package:app/always-native/widgets/NativeIconButton.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,7 +70,7 @@ class _ControlStateButtonState extends State<ControlStateButton> {
 
     List<Widget> btnChildren = [];
     if (icon != null) {
-      btnChildren.add(Icon(icon));
+      btnChildren.add(Icon(icon, color: Colors.white, size: 14,));
       btnChildren.add(const SizedBox(width: 5));
     }
 
@@ -85,18 +86,17 @@ class _ControlStateButtonState extends State<ControlStateButton> {
       }, icon: Icon(icon));
     }
 
-    return OutlinedButton(
+    return NativeButton(
       onPressed: (somethingIsHappening || widget.instance.state == 'Starting')
           ? null
           : () {
               doAction();
             },
-      style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(color),
-      ),
-      child: Row(
-        children: btnChildren,
-      ),
+      // style: ButtonStyle(
+      //   foregroundColor: MaterialStateProperty.all<Color>(color),
+      // ),
+      child: Text(text),
+      icon: icon,
     );
   }
 }

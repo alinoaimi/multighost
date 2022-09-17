@@ -1,3 +1,4 @@
+import 'package:app/always-native/data/NativeColor.dart';
 import 'package:app/data/MultipassDisk.dart';
 import 'package:app/utils/GlobalUtils.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class DiskWidget extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
+      // color: NativeColors.cardBackground,
       margin: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +46,7 @@ class DiskWidget extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(disk.name)
+                    Text(disk.name,)
                   ],
                 ),
                 const SizedBox(

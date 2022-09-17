@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/always-native/actions/DialogsSheetsActions.dart';
+import 'package:app/always-native/widgets/NativeButton.dart';
 import 'package:app/data/MultipassAlias.dart';
 import 'package:app/screens/CreateAlias.dart';
 import 'package:app/utils/GlobalUtils.dart';
@@ -101,20 +103,27 @@ class _MountsViewState extends State<MountsView> {
     ));
     bodyChildren.add(Row(
       children: [
-        OutlinedButton.icon(
-            onPressed: () {
-              Get.dialog(CreateMount(
-                instanceName: widget.instanceName,
-                onCreated: () {
-                  loadMounts();
-                },
-              ));
-            },
-            icon: const Icon(
-              Icons.add,
-              size: 14,
-            ),
-            label: const Text('Create a Mount'))
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+          child: NativeButton(
+              onPressed: () {
+
+                DialogsSheetsActions.nativeShowSheet(
+                    child: CreateMount(
+                      instanceName: widget.instanceName,
+                      onCreated: () {
+                        loadMounts();
+                      },
+                    ),
+                    context: context,
+                    barrierDismissible: true
+                );
+
+
+              },
+              icon: Icons.add,
+              child: const Text('Create a Mount')),
+        )
       ],
     ));
 
@@ -139,8 +148,14 @@ class _MountsViewState extends State<MountsView> {
           rows: dataRows),
     ));
 
-    return Column(
-      children: bodyChildren,
+    return Material(
+      color: Colors.transparent,
+      child: Theme(
+        data: ThemeData(brightness: ( MediaQuery.platformBrightnessOf(context) == Brightness.dark) ? Brightness.dark : Brightness.light),
+        child: Column(
+          children: bodyChildren,
+        ),
+      ),
     );
 
     return Container(

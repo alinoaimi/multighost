@@ -25,22 +25,26 @@ class _NativeListItemState extends State<NativeListItem> {
           GestureDetector(
             onTap: widget.onTap,
             onTapDown: (details) {
-              containerColor = MacosColors.systemBlueColor.withOpacity(0.6);
-              setState(() {});
+              if(widget.onTap != null) {
+                containerColor = MacosColors.systemBlueColor.withOpacity(0.6);
+                setState(() {});
+              }
             },
             onTapUp: (details) {
               containerColor = Colors.transparent;
               setState(() {});
             },
             child: MouseRegion(
-              cursor: SystemMouseCursors.click,
+              cursor: widget.onTap == null ? SystemMouseCursors.basic : SystemMouseCursors.click,
               onEnter: (details) {
-                containerColor = MacosTheme.brightnessOf(context).resolve(
-                  MacosColors.systemBlueColor.withOpacity(0.1),
-                  MacosColors.alternatingContentBackgroundColor,
-                  // const Color.fromRGBO(255, 255, 255, 0.25),
-                );
-                setState(() {});
+                if(widget.onTap != null) {
+                  containerColor = MacosTheme.brightnessOf(context).resolve(
+                    MacosColors.systemBlueColor.withOpacity(0.1),
+                    MacosColors.alternatingContentBackgroundColor,
+                    // const Color.fromRGBO(255, 255, 255, 0.25),
+                  );
+                  setState(() {});
+                }
               },
               onExit: (details) {
                 containerColor = Colors.transparent;

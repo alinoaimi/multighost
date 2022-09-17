@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/always-native/widgets/NativeButton.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,7 +51,8 @@ class _CreateMountState extends State<CreateMount> {
   }
 
   loadInstancesList() async {
-    var result = await Process.run(GlobalUtils.multipassPath, ['list', '--format=json']);
+    var result =
+        await Process.run(GlobalUtils.multipassPath, ['list', '--format=json']);
     try {
       list = [];
       var rawList = json.decode(result.stdout)['list'];
@@ -138,11 +140,13 @@ class _CreateMountState extends State<CreateMount> {
             ),
           ),
         ),
-        const SizedBox(width: 10,),
+        const SizedBox(
+          width: 10,
+        ),
         OutlinedButton(
             onPressed: () async {
               String? selectedDirectory =
-              await FilePicker.platform.getDirectoryPath();
+                  await FilePicker.platform.getDirectoryPath();
 
               if (selectedDirectory != null) {
                 // User canceled the picker
@@ -168,7 +172,7 @@ class _CreateMountState extends State<CreateMount> {
     ));
 
     List<Widget> actions = [];
-    actions.add(ElevatedButton(
+    actions.add(NativeButton(
         onPressed: isCreating
             ? null
             : () {
@@ -196,7 +200,7 @@ class _CreateMountState extends State<CreateMount> {
     return ParentDialog(
       title: 'Create a Mount',
       actions: actions,
-      child: body,
+      child: Material(color: Colors.transparent, child: body),
     );
   }
 }
