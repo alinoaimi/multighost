@@ -288,7 +288,7 @@ class _InstanceScreenState extends State<InstanceScreen> {
       bodyChildren.add(Flexible(
         flex: 9,
         child: AnimatedOpacity(
-          opacity: isLoadingDone ? 1 : 0,
+          opacity: isLoadingDone ? 1 : 0.0,
           duration: const Duration(milliseconds: 200),
           // padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
           child: NativeTabs(tabs: tabs,),
