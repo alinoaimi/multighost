@@ -12,8 +12,10 @@ Instance Details | Creating an Instance
 ![](/docs/images/screenshots/instance.png "Instance Details") | ![](/docs/images/screenshots/create_mount.png "Create a Mount")
 
 
-
-
+## Install
+Linux | macOS | Windows | Android | iOS
+--- | --- | --- | --- | ---
+building...| [MultiGhost-macos.zip](https://github.com/alinoaimi/multighost/releases/download/release/MultiGhost-macos.zip) | building... | building... | building...
 
 ## Install
 
