@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:macos_ui/macos_ui.dart';
 
+import '../data/NativeData.dart';
+
 class NativeSecondaryButton extends StatelessWidget {
   final Widget child;
   VoidCallback? onPressed;
@@ -11,9 +13,11 @@ class NativeSecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String os = 'macos';
 
-    if (os == 'macos') {
+    NativePlatform platform = NativeData.getPlatform();
+
+    if (platform == NativePlatform.macOS) {
+
       return PushButton(
         buttonSize: ButtonSize.large,
         onPressed: onPressed,

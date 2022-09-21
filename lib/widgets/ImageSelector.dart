@@ -192,7 +192,7 @@ class _ImageSelectorState extends ParentStepChildState<ImageSelector> {
             Row(
               children: [
                 SizedBox(
-                    height: 16, width: 16, child: NativeCircularProgressIndicator()),
+                    height: 16, width: 16, child: NativeCircularProgressIndicator(width: 8,)),
                 SizedBox(
                   width: GlobalUtils.standardPaddingOne,
                 ),

@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/always-native/widgets/NativeButton.dart';
+import 'package:app/always-native/widgets/NativeMaterial.dart';
+import 'package:app/always-native/widgets/NativeSecondaryButton.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -84,7 +86,11 @@ class _CreateMountState extends State<CreateMount> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> bodyChildren = [];
+    List<Widget> bodyChildren = [
+
+      SizedBox(height: GlobalUtils.standardPaddingOne*2,)
+
+    ];
 
     List<DropdownMenuItem<String>> instanceItems = [];
 
@@ -110,53 +116,64 @@ class _CreateMountState extends State<CreateMount> {
           selectedInstance = newVal.toString();
         }));
 
-    bodyChildren.add(Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () async {
-              String? selectedDirectory =
-                  await FilePicker.platform.getDirectoryPath();
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne));
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne));
 
-              if (selectedDirectory != null) {
-                // User canceled the picker
-                debugPrint(selectedDirectory);
-                _sourceController.text = selectedDirectory;
-              }
-            },
-            child: TextFormField(
-              enabled: false,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Required';
+    bodyChildren.add(Container(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () async {
+                String? selectedDirectory =
+                    await FilePicker.platform.getDirectoryPath();
+
+                if (selectedDirectory != null) {
+                  // User canceled the picker
+                  debugPrint(selectedDirectory);
+                  _sourceController.text = selectedDirectory;
                 }
-                return null;
               },
-              controller: _sourceController,
-              decoration: const InputDecoration(
-                  labelText: 'Source',
-                  helperText: 'The source folder at your host OS.'),
+              child: TextFormField(
+                readOnly: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Required';
+                  }
+                  return null;
+                },
+                controller: _sourceController,
+                decoration: const InputDecoration(
+                    labelText: 'Source',
+                    helperText: 'The source folder at your host OS.'),
+              ),
             ),
           ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        OutlinedButton(
-            onPressed: () async {
-              String? selectedDirectory =
-                  await FilePicker.platform.getDirectoryPath();
+          const SizedBox(
+            width: 10,
+          ),
+          NativeSecondaryButton(
+              onPressed: () async {
+                String? selectedDirectory =
+                    await FilePicker.platform.getDirectoryPath();
 
-              if (selectedDirectory != null) {
-                // User canceled the picker
-                debugPrint(selectedDirectory);
-                _sourceController.text = selectedDirectory;
-              }
-            },
-            child: const Text('📁 Pick Directory'))
-      ],
+                if (selectedDirectory != null) {
+                  // User canceled the picker
+                  debugPrint(selectedDirectory);
+                  _sourceController.text = selectedDirectory;
+                }
+              },
+              child: const Text('📁 Pick Directory'))
+        ],
+      ),
     ));
+
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne,));
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne,));
+
 
     bodyChildren.add(TextFormField(
       validator: (value) {
@@ -200,7 +217,7 @@ class _CreateMountState extends State<CreateMount> {
     return ParentDialog(
       title: 'Create a Mount',
       actions: actions,
-      child: Material(color: Colors.transparent, child: body),
+      child: body,
     );
   }
 }

@@ -32,26 +32,56 @@ class _MainScreenState extends State<MainScreen> {
   bool isInstalled = true;
 
   loadList() async {
-    list = [];
 
     try {
       // var result = await Process.run('which', [GlobalUtils.multipassPath]);
       // debugPrint('which output: ');
       // debugPrint(result.stdout.toString());
 
-      var result = await Process.run(
-          GlobalUtils.multipassPath, ['list', '--format=json']);
 
-      isInstalled = true;
-      list = [];
-      var rawList = json.decode(result.stdout)['list']; // replace with list
-      for (var rawInstance in rawList) {
-        MultipassInstanceObject multipassInstanceObject =
+      if (GlobalUtils.multipassPath == '') {
+        var whichResult = await Process.run('which', ['multipass']);
+
+        // debugPrint('whichResult.stdout: ' + whichResult.stdout);
+
+        if (whichResult.stdout.contains('multipass')) {
+          isInstalled = true;
+          GlobalUtils.multipassPath = whichResult.stdout.replaceAll("\n", '');
+
+        } else {
+          isInstalled = false;
+          setState(() {});
+        }
+      } else {
+        isInstalled = true;
+      }
+
+      if(isInstalled) {
+        try {
+
+          list = [];
+
+
+          var result = await Process.run(
+              GlobalUtils.multipassPath, ['list', '--format=json']);
+
+          isInstalled = true;
+          list = [];
+          var rawList = json.decode(result.stdout)['list']; // replace with list
+          for (var rawInstance in rawList) {
+            MultipassInstanceObject multipassInstanceObject =
             MultipassInstanceObject(
                 name: rawInstance['name'],
                 release: rawInstance['release'],
                 state: rawInstance['state']);
-        list?.add(multipassInstanceObject);
+            list?.add(multipassInstanceObject);
+          }
+          setState(() {
+
+          });
+        } catch(ex) {
+          debugPrint(ex.toString());
+        }
       }
     } catch (ex) {
       // TODO handle the exception
@@ -164,13 +194,9 @@ class _MainScreenState extends State<MainScreen> {
 
       theBody = Column(
         children: [
-          Flexible(
-            fit: FlexFit.tight,
-            flex: 1,
-            child: NativeAppBar(
-              title: 'MultiGhost',
-              actions: nativeAppBarActions,
-            ),
+          NativeAppBar(
+            title: 'MultiGhost',
+            actions: nativeAppBarActions,
           ),
           Flexible(
             fit: FlexFit.loose,
@@ -201,7 +227,11 @@ class _MainScreenState extends State<MainScreen> {
                       showAboutDialog(
                           context: context,
                           applicationVersion: packageInfo.version,
-                          applicationIcon: SizedBox(height: 48, child: Image.asset('assets/images/rounded-icon.png'),),
+                          applicationIcon: SizedBox(
+                            height: 48,
+                            child:
+                                Image.asset('assets/images/rounded-icon.png'),
+                          ),
                           children: [
                             const Text(
                                 'A GUI for Multipass, created using Flutter.'),

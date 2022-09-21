@@ -172,7 +172,6 @@ class _InstanceScreenState extends State<InstanceScreen> {
     } else
     {
       bodyChildren.add(SizedBox(
-        height: 100,
         child: Container(
           // padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
           child: InstanceCard(instance: instance!, internal: true),

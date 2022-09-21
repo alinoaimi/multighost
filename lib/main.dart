@@ -7,17 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'package:window_manager/window_manager.dart';
+import 'dart:io' show Platform;
+
+import 'always-native/data/NativeData.dart';
 
 void main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
 
-  WindowOptions windowOptions = const WindowOptions(
+
+  bool showTitleBar = true;
+  if (NativeData.getPlatform() == NativePlatform.macOS) {
+    showTitleBar = false;
+  }
+
+  WindowOptions windowOptions = WindowOptions(
     size: Size(800, 700),
     center: true,
     backgroundColor: Colors.transparent,
     skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.hidden,
+    titleBarStyle: showTitleBar ? TitleBarStyle.normal : TitleBarStyle.hidden,
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();

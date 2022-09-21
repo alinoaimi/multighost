@@ -5,12 +5,12 @@ import 'dart:io' show Platform;
 
 import '../data/NativeData.dart';
 
-class NativeButton extends StatelessWidget {
+class NativeTextButton extends StatelessWidget {
   final Widget child;
   VoidCallback? onPressed;
   IconData? icon;
 
-  NativeButton({Key? key, required this.child, this.onPressed, this.icon})
+  NativeTextButton({Key? key, required this.child, this.onPressed, this.icon})
       : super(key: key);
 
   @override
@@ -36,12 +36,16 @@ class NativeButton extends StatelessWidget {
       }
 
       return PushButton(
-        child: buttonChild,
         buttonSize: ButtonSize.large,
         onPressed: onPressed,
+        child: buttonChild,
       );
     } else {
-      return ElevatedButton(onPressed: onPressed, child: child);
+      return TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(shape: const BeveledRectangleBorder()),
+        child: child,
+      );
     }
   }
 }

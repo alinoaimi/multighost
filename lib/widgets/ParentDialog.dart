@@ -1,3 +1,5 @@
+import 'package:app/always-native/widgets/NativeMaterial.dart';
+import 'package:app/always-native/widgets/NativeSheet.dart';
 import 'package:app/utils/GlobalUtils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -62,6 +64,7 @@ class ParentDialog extends StatelessWidget {
       height: 1,
       color: Colors.grey.withOpacity(0.5),
     ));
+
     bodyChildren.add(Expanded(
       child: Padding(
         padding:
@@ -91,16 +94,28 @@ class ParentDialog extends StatelessWidget {
       ));
     }
 
+    // return NativeSheet(
+    //   child: SizedBox(
+    //     width: wide! ? 700 : 500,
+    //     child: Column(
+    //       crossAxisAlignment: CrossAxisAlignment.start,
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: bodyChildren,
+    //     ),
+    //   ),
+    // );
 
-    return MacosSheet(
+    return NativeSheet(
       child: SizedBox(
         width: wide! ? 700 : 500,
         child: Theme(
           data: ThemeData(brightness: ( MediaQuery.platformBrightnessOf(context) == Brightness.dark) ? Brightness.dark : Brightness.light),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: bodyChildren,
+          child: NativeMaterial(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: bodyChildren,
+            ),
           ),
         ),
       ),

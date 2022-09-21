@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:app/always-native/data/NativeColor.dart';
 import 'package:app/always-native/widgets/NativeButton.dart';
+import 'package:app/always-native/widgets/NativeMaterial.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -85,6 +86,9 @@ class _CreateAliasState extends State<CreateAlias> {
   Widget build(BuildContext context) {
     List<Widget> bodyChildren = [];
 
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne));
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne));
+
     List<DropdownMenuItem<String>> instanceItems = [];
 
     int index = -1;
@@ -109,6 +113,10 @@ class _CreateAliasState extends State<CreateAlias> {
           selectedInstance = newVal.toString();
         }));
 
+
+
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne));
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne));
     bodyChildren.add(TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -123,6 +131,9 @@ class _CreateAliasState extends State<CreateAlias> {
               'A command on your host OS, acts as shortcut to command on the VM.'),
     ));
 
+
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne));
+    bodyChildren.add(SizedBox(height: GlobalUtils.standardPaddingOne));
     bodyChildren.add(TextFormField(
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -168,10 +179,7 @@ class _CreateAliasState extends State<CreateAlias> {
     return ParentDialog(
       title: 'Create an Alias',
       actions: actions,
-      child: Material(
-        color: Colors.transparent,
-        child: body,
-      ),
+      child: body,
     );
   }
 }

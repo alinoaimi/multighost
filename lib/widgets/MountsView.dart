@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:app/always-native/actions/DialogsSheetsActions.dart';
 import 'package:app/always-native/widgets/NativeButton.dart';
+import 'package:app/always-native/widgets/NativeMaterial.dart';
 import 'package:app/data/MultipassAlias.dart';
 import 'package:app/screens/CreateAlias.dart';
 import 'package:app/utils/GlobalUtils.dart';
@@ -148,13 +149,19 @@ class _MountsViewState extends State<MountsView> {
           rows: dataRows),
     ));
 
-    return Material(
+    // return NativeMaterial(
+    //   color: Colors.transparent,
+    //   child: Theme(
+    //     data: ThemeData(brightness: ( MediaQuery.platformBrightnessOf(context) == Brightness.dark) ? Brightness.dark : Brightness.light),
+    //     child: Column(
+    //       children: bodyChildren,
+    //     ),
+    //   ),
+    // );
+    return NativeMaterial(
       color: Colors.transparent,
-      child: Theme(
-        data: ThemeData(brightness: ( MediaQuery.platformBrightnessOf(context) == Brightness.dark) ? Brightness.dark : Brightness.light),
-        child: Column(
-          children: bodyChildren,
-        ),
+      child: Column(
+        children: bodyChildren,
       ),
     );
 

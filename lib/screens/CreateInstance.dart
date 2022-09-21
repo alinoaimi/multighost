@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/always-native/widgets/NativeButton.dart';
+import 'package:app/always-native/widgets/NativeMaterial.dart';
 import 'package:app/always-native/widgets/NativeSecondaryButton.dart';
 import 'package:app/data/MultipassImage.dart';
 import 'package:app/screens/ProcessWithProgressDialog.dart';
@@ -225,7 +226,7 @@ class _CreateInstanceState extends State<CreateInstance> {
         childPadding: 0,
         // hideActions: true,
         actions: actions,
-        child: Material(
+        child: NativeMaterial(
             color: Colors.transparent,
             child: body));
   }

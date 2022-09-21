@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:macos_ui/macos_ui.dart';
 
+import '../data/NativeData.dart';
+
 class NativeMenuButtonItem {
   String? id;
   String? title;
@@ -27,9 +29,10 @@ class NativeMenuButton extends StatefulWidget {
 class _NativeMenuButtonState extends State<NativeMenuButton> {
   @override
   Widget build(BuildContext context) {
-    String os = 'macos';
 
-    if (os == 'macos') {
+    NativePlatform platform = NativeData.getPlatform();
+
+    if (platform == NativePlatform.macOS) {
       List<MacosPulldownMenuItem> macosItems = [];
 
       for (NativeMenuButtonItem item in widget.items) {

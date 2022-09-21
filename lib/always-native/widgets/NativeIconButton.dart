@@ -1,5 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:macos_ui/macos_ui.dart';
+import 'dart:io' show Platform;
+
+import '../data/NativeData.dart';
 
 class NativeIconButton extends StatelessWidget {
   VoidCallback? onPressed;
@@ -10,9 +14,15 @@ class NativeIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MacosIconButton(
-        icon: icon,
-        onPressed: onPressed,
-        boxConstraints: const BoxConstraints(maxHeight: 100, maxWidth: 100));
+    NativePlatform platform = NativeData.getPlatform();
+
+    if (platform == NativePlatform.macOS) {
+      return MacosIconButton(
+          icon: icon,
+          onPressed: onPressed,
+          boxConstraints: const BoxConstraints(maxHeight: 100, maxWidth: 100));
+    } else {
+      return IconButton(onPressed: onPressed, icon: icon);
+    }
   }
 }

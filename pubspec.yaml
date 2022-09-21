@@ -46,6 +46,7 @@ dependencies:
   window_manager: ^0.2.7
   flutter_platform_widgets: ^2.0.0
   macos_ui: ^1.7.5
+  yaru: ^0.4.1
 
 flutter_icons:
   android: "launcher_icon"

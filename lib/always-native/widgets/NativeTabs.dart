@@ -1,3 +1,4 @@
+import 'package:app/always-native/data/NativeData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:macos_ui/macos_ui.dart';
@@ -29,23 +30,57 @@ class _NativeTabsState extends State<NativeTabs> {
 
   @override
   Widget build(BuildContext context) {
-    List<MacosTab> macosTabs = [];
-    List<Widget> macosTabsChildren = [];
+    NativePlatform platform = NativeData.getPlatform();
+
+    if (platform == NativePlatform.macOS) {
+      List<MacosTab> macosTabs = [];
+      List<Widget> macosTabsChildren = [];
+
+      for (NativeTabsTab tab in widget.tabs) {
+        macosTabs.add(MacosTab(label: tab.title));
+        macosTabsChildren.add(Padding(
+          padding: const EdgeInsets.fromLTRB(0, 17, 0, 0),
+          child: tab.content,
+        ));
+      }
+
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+        child: MacosTabView(
+          controller: _macosController,
+          tabs: macosTabs,
+          children: macosTabsChildren,
+        ),
+      );
+    }
+
+    List<Tab> materialTabs = [];
+    List<Widget> materialTabsChildren = [];
 
     for (NativeTabsTab tab in widget.tabs) {
-      macosTabs.add(MacosTab(label: tab.title));
-      macosTabsChildren.add(Padding(
-        padding: const EdgeInsets.fromLTRB(0, 17, 0, 0),
+      materialTabs.add(Tab(text: tab.title));
+      materialTabsChildren.add(Padding(
+        padding: const EdgeInsets.fromLTRB(8, 0, 9, 0),
         child: tab.content,
       ));
     }
 
-    return MacosTabView(
-      controller: _macosController,
-      tabs: macosTabs,
-      children: macosTabsChildren,
+    return DefaultTabController(
+      length: materialTabs.length,
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 0,
+          automaticallyImplyLeading: false,
+          leading: null,
+          bottom: TabBar(
+            tabs: materialTabs,
+              isScrollable: true,
+          ),
+        ),
+        body:  TabBarView(
+          children: materialTabsChildren,
+        ),
+      ),
     );
-
-    return const Text('still working on it');
   }
 }
