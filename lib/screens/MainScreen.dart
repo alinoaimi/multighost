@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:app/always-native/data/NativeData.dart';
 import 'package:app/always-native/widgets/NativeWindow.dart';
 import 'package:app/data/MultipassInstanceObject.dart';
 import 'package:app/screens/CreateInstance.dart';
@@ -32,35 +33,34 @@ class _MainScreenState extends State<MainScreen> {
   bool isInstalled = true;
 
   loadList() async {
-
     try {
       // var result = await Process.run('which', [GlobalUtils.multipassPath]);
       // debugPrint('which output: ');
       // debugPrint(result.stdout.toString());
 
-
       if (GlobalUtils.multipassPath == '') {
-        var whichResult = await Process.run('which', ['multipass']);
-
-        // debugPrint('whichResult.stdout: ' + whichResult.stdout);
-
-        if (whichResult.stdout.contains('multipass')) {
-          isInstalled = true;
-          GlobalUtils.multipassPath = whichResult.stdout.replaceAll("\n", '');
-
+        if (NativeData.getPlatform() == NativePlatform.macOS) {
+          GlobalUtils.multipassPath = '/usr/local/bin/multipass';
         } else {
-          isInstalled = false;
-          setState(() {});
+          var whichResult = await Process.run('which', ['multipass']);
+
+          // debugPrint('whichResult.stdout: ' + whichResult.stdout);
+
+          if (whichResult.stdout.contains('multipass')) {
+            isInstalled = true;
+            GlobalUtils.multipassPath = whichResult.stdout.replaceAll("\n", '');
+          } else {
+            isInstalled = false;
+            setState(() {});
+          }
         }
       } else {
         isInstalled = true;
       }
 
-      if(isInstalled) {
+      if (isInstalled) {
         try {
-
           list = [];
-
 
           var result = await Process.run(
               GlobalUtils.multipassPath, ['list', '--format=json']);
@@ -70,16 +70,14 @@ class _MainScreenState extends State<MainScreen> {
           var rawList = json.decode(result.stdout)['list']; // replace with list
           for (var rawInstance in rawList) {
             MultipassInstanceObject multipassInstanceObject =
-            MultipassInstanceObject(
-                name: rawInstance['name'],
-                release: rawInstance['release'],
-                state: rawInstance['state']);
+                MultipassInstanceObject(
+                    name: rawInstance['name'],
+                    release: rawInstance['release'],
+                    state: rawInstance['state']);
             list?.add(multipassInstanceObject);
           }
-          setState(() {
-
-          });
-        } catch(ex) {
+          setState(() {});
+        } catch (ex) {
           debugPrint(ex.toString());
         }
       }

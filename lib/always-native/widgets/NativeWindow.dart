@@ -1,7 +1,9 @@
+import 'package:app/always-native/widgets/NativeMaterial.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:macos_ui/macos_ui.dart';
 import 'dart:io' show Platform;
+import 'package:fluent_ui/fluent_ui.dart' as fluent_ui;
 
 import '../data/NativeData.dart';
 
@@ -30,6 +32,10 @@ class _NativeWindowState extends State<NativeWindow> {
                 title: Text('MultiGhost'),
               ),
         child: widget.child,
+      );
+    } else if(platform == NativePlatform.Windows) {
+      return  fluent_ui.NavigationView(
+        content: NativeMaterial(child: widget.child),
       );
     } else {
       return Scaffold(

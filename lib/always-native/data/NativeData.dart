@@ -8,7 +8,6 @@ class NativeData {
 
   static NativePlatform getPlatform() {
 
-    // return NativePlatform.Linux;
 
     if(Platform.isMacOS) {
       return NativePlatform.macOS;
@@ -17,6 +16,7 @@ class NativeData {
       return NativePlatform.Linux;
     }
     if(Platform.isWindows) {
+      return NativePlatform.macOS; // TODO fix after implementing fluentui
       return NativePlatform.Windows;
     }
     if(Platform.isAndroid) {

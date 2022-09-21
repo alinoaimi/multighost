@@ -1,4 +1,5 @@
 import 'package:app/always-native/data/NativeData.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fluent_ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:macos_ui/macos_ui.dart';
@@ -52,6 +53,16 @@ class _NativeAppState extends State<NativeApp> {
           debugShowCheckedModeBanner: widget.debugShowCheckedModeBanner,
         );
       });
+    } else if (platform == NativePlatform.Windows) {
+      return fluent_ui.FluentApp(
+        title: 'MyApp',
+        darkTheme: fluent_ui.ThemeData(
+          brightness: Brightness.dark,
+        ),
+        theme: fluent_ui.ThemeData(
+        ),
+        routes: widget.routes!,
+      );
     }
 
     return MaterialApp(
