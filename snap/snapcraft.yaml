@@ -12,6 +12,10 @@ parts:
     source: .
     flutter-target: lib/main.dart
 
+architectures:
+  - amd64
+  - arm64
+
 apps:
   multighost:
     command: multighost
