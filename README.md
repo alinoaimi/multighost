@@ -13,13 +13,19 @@ Instance Details | Creating an Instance
 
 
 ## Install
-Linux | macOS | Windows | Android | iOS
---- | --- | --- | --- | ---
-building...| [MultiGhost-macos.zip](https://github.com/alinoaimi/multighost/releases/download/release/MultiGhost-macos.zip) | building... | building... | building...
+### Linux
+#### Snap
+[https://snapcraft.io/multighost](https://snapcraft.io/multighost)
 
-## Install
+    sudo snap install --beta multighost --devmode
+    
+The app is not yet downloadable from the Snap Store, to install it use the command above.
 
-I am building the packages, will be available soon
+#### macOS
+DMG: [MultiGhost-macos.zip](https://github.com/alinoaimi/multighost/releases/download/release/MultiGhost-macos.zip)
+
+#### Windows
+coming soon
 
 ## Development
 
