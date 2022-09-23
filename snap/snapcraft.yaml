@@ -1,0 +1,18 @@
+name: multighost
+version: '1.0.1'
+summary: A GUI for Multipass
+description: Create virtual Ubuntu instances.
+
+confinement: classic
+base: core18
+
+parts:
+  multighost:
+    plugin: flutter
+    source: .
+    flutter-target: lib/main.dart
+
+apps:
+  multighost:
+    command: multighost
+    extensions: [flutter-stable]

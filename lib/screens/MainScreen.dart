@@ -38,24 +38,29 @@ class _MainScreenState extends State<MainScreen> {
       // debugPrint('which output: ');
       // debugPrint(result.stdout.toString());
 
-      if (GlobalUtils.multipassPath == '') {
-        if (NativeData.getPlatform() == NativePlatform.macOS) {
-          GlobalUtils.multipassPath = '/usr/local/bin/multipass';
-        } else {
-          var whichResult = await Process.run('which', ['multipass']);
+      List<String> pathsToTry = [
+        '/usr/bin/multipass',
+        '/usr/local/bin/multipass',
+        '/snap/bin/multipass',
+      ];
 
-          // debugPrint('whichResult.stdout: ' + whichResult.stdout);
+      for(String pathToTry in pathsToTry) {
+        try {
+            var result = await Process.run(
+                pathToTry, ['list', '--format=json']);
+            var rawList = json.decode(result.stdout)['list']; // replace with list
 
-          if (whichResult.stdout.contains('multipass')) {
+            GlobalUtils.multipassPath = pathToTry;
             isInstalled = true;
-            GlobalUtils.multipassPath = whichResult.stdout.replaceAll("\n", '');
-          } else {
-            isInstalled = false;
-            setState(() {});
-          }
+            break;
+        } catch(ex) {
+
         }
-      } else {
-        isInstalled = true;
+      }
+
+
+      if(GlobalUtils.multipassPath == '') {
+        isInstalled = false;
       }
 
       if (isInstalled) {

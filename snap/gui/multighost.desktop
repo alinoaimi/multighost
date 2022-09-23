@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Multighost
+Comment=A GUI for Multipass
+Exec=multighost
+Icon=${SNAP}/meta/gui/multighost.png
+Terminal=false
+Type=Application
+Categories=Development;
