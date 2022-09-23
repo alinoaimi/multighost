@@ -3,7 +3,7 @@ version: '1.0.1'
 summary: A GUI for Multipass
 description: Create virtual Ubuntu instances.
 
-confinement: classic
+confinement: devmode
 base: core18
 
 parts:
